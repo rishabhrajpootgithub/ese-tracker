@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESE Civil Paper 2 Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #08090E; color: #fff; font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 40px; }
+.header { background: linear-gradient(160deg, #0f0c29, #1a1a2e, #16213e); padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
+.header-label { font-size: 10px; color: #6366F1; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; }
+.header h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 14px; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.stat-box { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 7px 12px; border: 1px solid rgba(255,255,255,0.08); }
+.stat-val { font-size: 16px; font-weight: 900; line-height: 1; }
+.stat-label { font-size: 9px; color: #4B5563; font-weight: 700; letter-spacing: 1px; margin-top: 2px; }
+.overall-progress { margin-top: 14px; }
+.progress-header { display: flex; justify-content: space-between; font-size: 11px; color: #6B7280; margin-bottom: 6px; font-weight: 600; }
+.progress-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #6366F1, #F472B6); transition: width 0.4s ease; }
+.main { max-width: 720px; margin: 0 auto; padding: 16px; }
+.search-box { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; }
+.search-box::placeholder { color: #4B5563; }
+.count-label { font-size: 11px; color: #374151; font-weight: 600; margin-bottom: 10px; }
+.subject-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.2s; }
+.subject-card.completed { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.05); }
+.subject-header { padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+.subject-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; position: relative; }
+.done-tick { position: absolute; top: -4px; right: -4px; background: #6366F1; border-radius: 99px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; }
+.subject-info { flex: 1; }
+.subject-name { font-size: 14px; font-weight: 800; }
+.subject-meta { font-size: 10px; color: #6B7280; margin-top: 2px; }
+.subject-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.mini-prog { font-size: 11px; font-weight: 800; }
+.arrow { font-size: 11px; color: #4B5563; }
+.subject-detail { display: none; padding: 0 14px 14px; flex-direction: column; gap: 6px; }
+.subject-detail.open { display: flex; }
+.day-prog-header { display: flex; justify-content: space-between; font-size: 10px; color: #6B7280; margin-bottom: 4px; }
+.day-prog-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 5px; overflow: hidden; margin-bottom: 10px; }
+.day-prog-fill { height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 10px; border-radius: 8px; background: rgba(255,255,255,0.02); margin-bottom: 4px; }
+.custom-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.2s; font-size: 10px; margin-top: 1px; }
+.custom-check.checked { border-color: transparent; }
+.check-name { font-size: 12px; font-weight: 600; flex: 1; line-height: 1.3; }
+.check-name.done-text { text-decoration: line-through; opacity: 0.4; }
+.ch-num { font-size: 9px; font-weight: 800; opacity: 0.5; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="max-width:720px;margin:0 auto">
+    <div class="header-label">ESE MAINS • CIVIL ENGINEERING PAPER 2</div>
+    <h1>Civil Engg. Chapter Tracker 🏗️</h1>
+    <div class="stats" id="stats"></div>
+    <div class="overall-progress">
+      <div class="progress-header"><span>Overall Progress</span><span id="overall-pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="overall-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+<div class="main">
+  <input class="search-box" id="search" placeholder="🔍  Search subject or chapter..." oninput="renderAll()">
+  <div class="count-label" id="count-label"></div>
+  <div id="subjects-list"></div>
+</div>
+<script>
+const SUBJECTS = [
+  {
+    id:'engmech', name:'Engineering Mechanics', emoji:'⚙️', color:'#60A5FA',
+    chapters:['Basic Concepts','Law of Forces','Moments','Moments of Inertia','Centre of Mass','Friction & Circular Motion','Rectilinear Motion & Laws of Motion','Work, Power & Energy','Miscellaneous']
+  },
+  {
+    id:'som', name:'Strength of Materials', emoji:'🔩', color:'#A78BFA',
+    chapters:['Strength of Materials','Shear Force and Bending Moment','Deflection of Beams','Transformation of Stress and Strain','Combined Stresses','Bending Stress in Beams','Shear Stress in Beams','Torsion of Circular Shaft','Columns','Springs','Thick and Thin Cylinder/Sphere','Moment of Inertia']
+  },
+  {
+    id:'sa', name:'Structural Analysis', emoji:'🏛️', color:'#F472B6',
+    chapters:['Determinacy, Indeterminacy and Stability of Structures','Force Method of Analysis (Statically Indeterminate Structures)','Displacement Method of Analysis (Slope Deflection Method)','Displacement Method of Analysis (Moment Distribution Method)','Trusses','Influence Line Diagram','Matrix Method of Analysis','Arches and Suspended Cables','Approximate Method for Analysis of Structure','Structural Dynamics']
+  },
+  {
+    id:'steel', name:'Steel Structures', emoji:'🔧', color:'#34D399',
+    chapters:['General Design Requirements','Connections','Design of Tension Members','Design of Compression Members','Design of Beams','Design of Plate Girders','Design of Gantry Girders','Plastic Analysis','Industrial Building']
+  },
+  {
+    id:'rcc', name:'RCC & Prestressed Concrete', emoji:'🏢', color:'#FB923C',
+    chapters:['Limit State and Working Stress Methods','Limit State of Collapse in Shear','Bond and Anchorage','Torsion','Design of Beam and Slab','Columns and Wall','Footing','Prestressed Concrete','Earthquake Engineering','Retaining Wall, Tank, Staircase and Lintel']
+  },
+  {
+    id:'cpm', name:'PERT & CPM', emoji:'📊', color:'#818CF8',
+    chapters:['Project Management','Fundamental of Network','Programme Evaluation Review Technique (PERT)','Critical Path Method (CPM)','Crashing','Updating and Resources Allocation','A–O–N Diagram','Engineering Economy','Construction Equipment','Labour, Safety and Welfare, Land Acquisition','Miscellaneous']
+  },
+  {
+    id:'estim', name:'Estimating, Costing & Valuation', emoji:'🧮', color:'#C084FC',
+    chapters:['Operation of Estimating','Road Estimation & Method','Type of Estimate-Section-Project','Analysis of Rates & Specifications','Building Valuation & Rent Fixation','P.W.D. Account & Procedure of Work','Planning of Building & Law']
+  },
+  {
+    id:'bmat', name:'Building Materials', emoji:'🧱', color:'#F97316',
+    chapters:['Cement','Concrete','Brick and Stone','Mortar','Masonry','Timber','Miscellaneous']
+  },
+  {
+    id:'bcon', name:'Building Construction, Maintenance & Equipment', emoji:'🏗️', color:'#FBBF24',
+    chapters:['Masonry','Wall','Foundation','Doors, Windows & Ventilators','Arches & Lintel','Stairs & Lifts','Floor & Flooring','Scaffolding, Shoring & Formwork','Roof & Roof Covering','Plastering & Pointing','Miscellaneous']
+  },
+  {
+    id:'surv', name:'Surveying', emoji:'📏', color:'#2DD4BF',
+    chapters:['Fundamentals of Surveying','Linear Measurements','Compass Surveying','Theodolite','Traversing','Levelling','Tacheometry','Trigonometric Levelling','Photogrammetry','Theory of Errors','Curves','Measurement of Area & Volume','Plane Table Survey','Field Astronomy','Contouring','Minor Instruments','GPS and Remote Sensing','Miscellaneous']
+  },
+  {
+    id:'fm', name:'Fluid Mechanics', emoji:'💧', color:'#22D3EE',
+    chapters:['Fluid Properties','Hydrostatic Pressure','Liquid in Relative Equilibrium','Buoyancy and Floatation','Fluid Kinematics','Fluid Dynamics','Weirs and Notches','Laminar Flow','Turbulent Flow','Boundary Layer Theory','Drag and Lift','Flow Through Pipes','Modal Analysis and Dimensional Analysis']
+  },
+  {
+    id:'ocf', name:'Open Channel Flow', emoji:'🌊', color:'#0EA5E9',
+    chapters:['Open Channel Flow (Types of Flow, Uniform Flow Formula, Most Economical Channel Section, Non-Uniform Flow, Specific Energy, Hydraulic Jump, Gradually Varied Flow)']
+  },
+  {
+    id:'hm', name:'Hydraulic Machines', emoji:'⚡', color:'#F97316',
+    chapters:['Impact on Jets','Hydraulic Turbine','Pump','Miscellaneous']
+  },
+  {
+    id:'env', name:'Environmental Engineering', emoji:'🌿', color:'#4ADE80',
+    chapters:['Water Demand, Its Source & Conveyance','Quality Parameters of Water','Treatment of Water','Distribution System','Waste Water Characteristics','Biochemical Reactions in Treatment of Waste Water','Disposal of Sewage Effluent','Design of Sewerage System and Sewer Appurtenances','Sewage Treatment','Solid Waste Management','Air Pollution','Noise Pollution','Miscellaneous']
+  },
+  {
+    id:'hydro', name:'Engineering Hydrology', emoji:'🌧️', color:'#67E8F9',
+    chapters:['Introduction','Measurement of Precipitation','Abstractions from Precipitation','Surface Water Hydrology (Runoff)','Stream Flow Measurement','Surface Water Hydrology (Hydrographs)','Floods','Flood Routing','Ground Water Hydrology']
+  },
+  {
+    id:'irrig', name:'Irrigation Engineering', emoji:'🌾', color:'#34D399',
+    chapters:['Irrigation & Methods of Irrigation','Soil Moisture & Plant Relationships','Water Requirements of Crops & Canal Irrigation','Water Logging & Reclamation of Saline Soils','Canal Design','Canal Regulation Work','Canal Head Works & Seepage Theory','River Engineering','Cross Drainage Works','Dams and Reservoirs','Spillways, Energy Dissipators & Spillway Gates','Miscellaneous']
+  },
+  {
+    id:'soil', name:'Soil Mechanics & Foundation Engineering', emoji:'⛏️', color:'#FBBF24',
+    chapters:['Origin of Soil and Soil Water Relationship','Classification of Soil','Clay Mineral and Soil Structure','Soil Compaction','Effective Stress, Capillarity and Permeability','Seepage through Soil','Vertical Stresses','Compressibility and Consolidation','Shear Strength of Soil','Stability of Slopes','Earth Pressure and Retaining Walls','Shallow Foundation','Deep Foundation','Soil Exploration','Expansive Soils','Engineering Geology']
+  },
+  {
+    id:'hwy', name:'Highway & Traffic Engineering', emoji:'🛣️', color:'#FB7185',
+    chapters:['Highway Development and Planning','Geometric Design','Traffic Engineering','Highway Materials','Pavement Design','Highway Construction','Highway Maintenance','Hill Road']
+  },
+  {
+    id:'rail', name:'Railway Engineering', emoji:'🚂', color:'#A3E635',
+    chapters:['Rail, Railway and Rail Joints','Sleepers and Track Fasteners','Ballast and Soil Sub Grade','Stresses on Railway Track and Creep of Rail','Geometric Design of the Track','Points and Crossings','Stations and Yards and Equipments in Station Yards','Signalling and Control System','Traction and Tractive Resistances','Miscellaneous']
+  },
+  {
+    id:'tunnel', name:'Tunneling', emoji:'🚇', color:'#9CA3AF',
+    chapters:['Tunnel Engineering']
+  },
+  {
+    id:'dock', name:'Port, Dock & Harbour', emoji:'⚓', color:'#93C5FD',
+    chapters:['Water Transportation','Port','Natural Phenomena','Breakwaters','Dock']
+  },
+  {
+    id:'bridge', name:'Bridge Engineering', emoji:'🌉', color:'#F9A8D4',
+    chapters:['Introduction to Bridge Engineering','Types of Bridges','Bridge Components','Bridge Loading','Design of Bridge Elements','Bridge Foundations']
+  },
+];
+
+function getProgress(){try{return JSON.parse(localStorage.getItem('eseCivilP2Progress')||'{}');}catch{return{};}}
+function saveProgress(p){try{localStorage.setItem('eseCivilP2Progress',JSON.stringify(p));}catch{}}
+let progress=getProgress();
+
+function getCheckId(sid,ci){return `${sid}_c${ci}`;}
+function getStats(s){let t=s.chapters.length,d=0;s.chapters.forEach((_,i)=>{if(progress[getCheckId(s.id,i)])d++;});return{total:t,done:d};}
+
+function toggleCheck(sid,ci){
+  const id=getCheckId(sid,ci);
+  progress[id]=!progress[id];
+  saveProgress(progress);
+  updateCard(sid);
+  updateOverall();
+}
+
+function updateOverall(){
+  let total=0,done=0;
+  SUBJECTS.forEach(s=>{const st=getStats(s);total+=st.total;done+=st.done;});
+  const pct=total===0?0:Math.round(done/total*100);
+  const bar=document.getElementById('overall-bar');
+  const pe=document.getElementById('overall-pct');
+  if(bar)bar.style.width=pct+'%';
+  if(pe)pe.textContent=pct+'%';
+  renderStats(done,total);
+}
+
+function renderStats(done,total){
+  const el=document.getElementById('stats');
+  if(!el)return;
+  const sd=SUBJECTS.filter(s=>{const st=getStats(s);return st.done===st.total;}).length;
+  el.innerHTML=[
+    {label:'Subjects',val:SUBJECTS.length,color:'#FBBF24'},
+    {label:'Done',val:sd,color:'#34D399'},
+    {label:'Chapters',val:`${done}/${total}`,color:'#818CF8'},
+    {label:'Overall',val:`${Math.round(done/total*100||0)}%`,color:'#F472B6'},
+  ].map(s=>`<div class="stat-box" style="border-color:${s.color}25">
+    <div class="stat-val" style="color:${s.color}">${s.val}</div>
+    <div class="stat-label">${s.label}</div>
+  </div>`).join('');
+}
+
+function updateCard(sid){
+  const s=SUBJECTS.find(x=>x.id===sid);
+  if(!s)return;
+  const{total,done}=getStats(s);
+  const allDone=done===total;
+  const pct=Math.round(done/total*100);
+  const col=s.color;
+
+  const card=document.getElementById('card-'+sid);
+  if(card)card.className='subject-card'+(allDone?' completed':'');
+  const icon=document.getElementById('icon-'+sid);
+  if(icon){icon.innerHTML=s.emoji+(allDone?'<span class="done-tick">✓</span>':'');icon.style.background=allDone?col+'30':'rgba(255,255,255,0.06)';}
+  const mini=document.getElementById('mini-'+sid);
+  if(mini){const c=allDone?'#34D399':done>0?'#FBBF24':'#4B5563';mini.innerHTML=`<span style="color:${c}">${done}/${total}</span>`;}
+  const fill=document.getElementById('fill-'+sid);
+  const pe=document.getElementById('pct-'+sid);
+  if(fill){fill.style.width=pct+'%';fill.style.background=allDone?'#34D399':`linear-gradient(90deg,${col},${col}88)`;}
+  if(pe)pe.textContent=pct+'%';
+
+  s.chapters.forEach((_,i)=>{
+    const id=getCheckId(sid,i);
+    const box=document.getElementById('box-'+id);
+    const nm=document.getElementById('name-'+id);
+    if(box){const ck=!!progress[id];box.className='custom-check'+(ck?' checked':'');box.style.background=ck?col:'transparent';box.style.borderColor=ck?col:'rgba(255,255,255,0.15)';box.innerHTML=ck?'✓':'';}
+    if(nm)nm.className='check-name'+(progress[id]?' done-text':'');
+  });
+}
+
+function buildHTML(s){
+  const{total,done}=getStats(s);
+  const allDone=done===total;
+  const pct=Math.round(done/total*100);
+  const col=s.color;
+  const mc=allDone?'#34D399':done>0?'#FBBF24':'#4B5563';
+
+  const rows=s.chapters.map((ch,i)=>{
+    const id=getCheckId(s.id,i);
+    const ck=!!progress[id];
+    return `<div class="checkbox-row">
+      <div class="custom-check ${ck?'checked':''}" id="box-${id}"
+        style="background:${ck?col:'transparent'};border-color:${ck?col:'rgba(255,255,255,0.15)'}"
+        onclick="toggleCheck('${s.id}',${i});event.stopPropagation()">${ck?'✓':''}</div>
+      <div style="flex:1">
+        <div class="check-name ${ck?'done-text':''}" id="name-${id}">${ch}</div>
+        <div class="ch-num">Chapter ${i+1}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="subject-card ${allDone?'completed':''}" id="card-${s.id}">
+    <div class="subject-header" onclick="toggleSubject('${s.id}')">
+      <div class="subject-icon" id="icon-${s.id}" style="background:${allDone?col+'30':'rgba(255,255,255,0.06)'}">
+        ${s.emoji}${allDone?'<span class="done-tick">✓</span>':''}
+      </div>
+      <div class="subject-info">
+        <div class="subject-name">${s.name}</div>
+        <div class="subject-meta">${total} chapters</div>
+      </div>
+      <div class="subject-right">
+        <span class="mini-prog" id="mini-${s.id}"><span style="color:${mc}">${done}/${total}</span></span>
+        <span class="arrow" id="arr-${s.id}">▼</span>
+      </div>
+    </div>
+    <div class="subject-detail" id="detail-${s.id}">
+      <div>
+        <div class="day-prog-header"><span>Progress</span><span id="pct-${s.id}">${pct}%</span></div>
+        <div class="day-prog-track"><div class="day-prog-fill" id="fill-${s.id}" style="width:${pct}%;background:${allDone?'#34D399':`linear-gradient(90deg,${col},${col}88)`}"></div></div>
+      </div>
+      ${rows}
+    </div>
+  </div>`;
+}
+
+function toggleSubject(id){
+  const d=document.getElementById('detail-'+id);
+  const a=document.getElementById('arr-'+id);
+  const open=d.classList.contains('open');
+  d.classList.toggle('open',!open);
+  a.textContent=open?'▼':'▲';
+}
+
+function renderAll(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const filtered=SUBJECTS.filter(s=>{
+    if(!q)return true;
+    if(s.name.toLowerCase().includes(q))return true;
+    return s.chapters.some(ch=>ch.toLowerCase().includes(q));
+  });
+  document.getElementById('count-label').textContent=filtered.length+' / '+SUBJECTS.length+' subjects • Tap to expand';
+  document.getElementById('subjects-list').innerHTML=filtered.map(buildHTML).join('');
+}
+
+renderAll();
+updateOverall();
+</script>
+</body>
+</html>

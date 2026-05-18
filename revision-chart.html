@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESE Civil — Revision Chart</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #08090E; color: #fff; font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 60px; }
+
+/* HEADER */
+.header { background: linear-gradient(160deg, #0f0c29, #1a1a2e, #16213e); padding: 24px 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
+.header-inner { max-width: 780px; margin: 0 auto; }
+.header-label { font-size: 10px; color: #6366F1; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; }
+.header h1 { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 14px; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.stat-box { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 7px 12px; border: 1px solid rgba(255,255,255,0.08); }
+.stat-val { font-size: 16px; font-weight: 900; line-height: 1; }
+.stat-label { font-size: 9px; color: #4B5563; font-weight: 700; letter-spacing: 1px; margin-top: 2px; }
+.progress-header { display: flex; justify-content: space-between; font-size: 11px; color: #6B7280; margin-bottom: 6px; font-weight: 600; }
+.progress-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #6366F1, #F472B6); transition: width 0.4s ease; }
+
+/* MAIN */
+.main { max-width: 780px; margin: 0 auto; padding: 16px; }
+
+/* PAPER SECTION */
+.paper-section { margin-bottom: 24px; }
+.paper-title { font-size: 11px; font-weight: 800; letter-spacing: 3px; padding: 8px 14px; border-radius: 8px; margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; }
+.paper-title.p1 { background: rgba(99,102,241,0.12); color: #818CF8; border: 1px solid rgba(99,102,241,0.25); }
+.paper-title.p2 { background: rgba(244,114,182,0.12); color: #F472B6; border: 1px solid rgba(244,114,182,0.25); }
+
+/* SUBJECT CARD */
+.subject-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; margin-bottom: 10px; padding: 12px 14px; transition: border-color 0.3s, background 0.3s; }
+.subject-card.all-done { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.04); }
+
+.card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.subject-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; background: rgba(255,255,255,0.06); position: relative; transition: background 0.3s; }
+.done-badge { position: absolute; top: -4px; right: -4px; background: #34D399; border-radius: 99px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #08090E; font-weight: 900; }
+.card-info { flex: 1; min-width: 0; }
+.subject-name { font-size: 13px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rev-count { font-size: 10px; color: #6B7280; font-weight: 600; margin-top: 2px; }
+.card-pct { font-size: 12px; font-weight: 900; flex-shrink: 0; }
+
+/* BOXES GRID */
+.boxes-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; margin-bottom: 6px; }
+.rev-box { aspect-ratio: 1; border-radius: 5px; border: 1.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: transparent; transition: all 0.15s ease; position: relative; }
+.rev-box:hover { border-color: rgba(255,255,255,0.3); transform: scale(1.1); }
+.rev-box.ticked { color: rgba(0,0,0,0.7); }
+.rev-box-label { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; }
+.box-num { font-size: 8px; text-align: center; color: rgba(255,255,255,0.12); font-weight: 700; }
+
+/* MINI PROGRESS BAR */
+.mini-bar-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 3px; margin-top: 4px; overflow: hidden; }
+.mini-bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
+
+/* RESET BTN */
+.reset-btn { background: none; border: none; color: #374151; font-size: 10px; font-weight: 700; cursor: pointer; margin-left: auto; padding: 2px 6px; border-radius: 5px; font-family: inherit; }
+.reset-btn:hover { color: #6B7280; }
+.card-actions { display: flex; align-items: center; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-label">ESE MAINS • CIVIL ENGINEERING</div>
+    <h1>📋 Revision Chart — Paper 1 &amp; 2</h1>
+    <div class="stats" id="stats"></div>
+    <div>
+      <div class="progress-header">
+        <span>Overall Revision Progress</span>
+        <span id="overall-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="overall-bar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="paper-section">
+    <div class="paper-title p1">📘 PAPER 1 — GS &amp; ENGINEERING APTITUDE</div>
+    <div id="paper1-list"></div>
+  </div>
+  <div class="paper-section">
+    <div class="paper-title p2">📗 PAPER 2 — CIVIL ENGINEERING</div>
+    <div id="paper2-list"></div>
+  </div>
+</div>
+
+<script>
+const TOTAL_BOXES = 12;
+
+const PAPER1 = [
+  { id:'engmath',  name:'Engineering Mathematics',           emoji:'📐', color:'#60A5FA' },
+  { id:'energy',   name:'Basics of Energy & Environment',    emoji:'🌱', color:'#34D399' },
+  { id:'design',   name:'General Principles of Design, Drawing & Safety', emoji:'✏️', color:'#FBBF24' },
+  { id:'matsci',   name:'Material Science & Engineering',    emoji:'🔬', color:'#A78BFA' },
+  { id:'stdqual',  name:'Standards & Quality Practices',     emoji:'✅', color:'#4ADE80' },
+  { id:'projmgmt', name:'Project Management',                emoji:'📊', color:'#818CF8' },
+  { id:'ict',      name:'ICT',                               emoji:'💻', color:'#67E8F9' },
+  { id:'ethics',   name:'Ethics & Values',                   emoji:'⚖️', color:'#F9A8D4' },
+  { id:'reasoning',name:'Reasoning & Aptitude',              emoji:'🧠', color:'#FB923C' },
+  { id:'current',  name:'Current Issues',                    emoji:'🌐', color:'#34D399' },
+];
+
+const PAPER2 = [
+  { id:'engmech',  name:'Engineering Mechanics',             emoji:'⚙️', color:'#60A5FA' },
+  { id:'som',      name:'Strength of Materials',             emoji:'🔩', color:'#A78BFA' },
+  { id:'sa',       name:'Structural Analysis',               emoji:'🏛️', color:'#F472B6' },
+  { id:'steel',    name:'Steel Structures',                  emoji:'🔧', color:'#34D399' },
+  { id:'rcc',      name:'RCC & Prestressed Concrete',        emoji:'🏢', color:'#FB923C' },
+  { id:'cpm',      name:'PERT & CPM',                        emoji:'📊', color:'#818CF8' },
+  { id:'estim',    name:'Estimating, Costing & Valuation',   emoji:'🧮', color:'#C084FC' },
+  { id:'bmat',     name:'Building Materials',                emoji:'🧱', color:'#F97316' },
+  { id:'bcon',     name:'Building Construction & Maintenance',emoji:'🏗️', color:'#FBBF24' },
+  { id:'surv',     name:'Surveying',                         emoji:'📏', color:'#2DD4BF' },
+  { id:'fm',       name:'Fluid Mechanics',                   emoji:'💧', color:'#22D3EE' },
+  { id:'ocf',      name:'Open Channel Flow',                 emoji:'🌊', color:'#0EA5E9' },
+  { id:'hm',       name:'Hydraulic Machines',                emoji:'⚡', color:'#F97316' },
+  { id:'env',      name:'Environmental Engineering',         emoji:'🌿', color:'#4ADE80' },
+  { id:'hydro',    name:'Engineering Hydrology',             emoji:'🌧️', color:'#67E8F9' },
+  { id:'irrig',    name:'Irrigation Engineering',            emoji:'🌾', color:'#34D399' },
+  { id:'soil',     name:'Soil Mechanics & Foundation Engg.', emoji:'⛏️', color:'#FBBF24' },
+  { id:'hwy',      name:'Highway & Traffic Engineering',     emoji:'🛣️', color:'#FB7185' },
+  { id:'rail',     name:'Railway Engineering',               emoji:'🚂', color:'#A3E635' },
+  { id:'tunnel',   name:'Tunneling',                         emoji:'🚇', color:'#9CA3AF' },
+  { id:'dock',     name:'Port, Dock & Harbour',              emoji:'⚓', color:'#93C5FD' },
+  { id:'bridge',   name:'Bridge Engineering',                emoji:'🌉', color:'#F9A8D4' },
+];
+
+const ALL = [...PAPER1, ...PAPER2];
+
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('eseRevChart_v2') || '{}'); } catch { return {}; }
+}
+function saveProgress(p) {
+  try { localStorage.setItem('eseRevChart_v2', JSON.stringify(p)); } catch {}
+}
+
+let progress = getProgress();
+
+function getRevCount(sid) {
+  let count = 0;
+  for (let i = 0; i < TOTAL_BOXES; i++) {
+    if (progress[`${sid}_r${i}`]) count++;
+  }
+  return count;
+}
+
+function toggleBox(sid, idx) {
+  const key = `${sid}_r${idx}`;
+  progress[key] = !progress[key];
+  saveProgress(progress);
+  updateCard(sid);
+  updateOverall();
+}
+
+function resetSubject(sid) {
+  for (let i = 0; i < TOTAL_BOXES; i++) {
+    delete progress[`${sid}_r${i}`];
+  }
+  saveProgress(progress);
+  updateCard(sid);
+  updateOverall();
+}
+
+function updateCard(sid) {
+  const subj = ALL.find(s => s.id === sid);
+  if (!subj) return;
+  const count = getRevCount(sid);
+  const allDone = count === TOTAL_BOXES;
+  const pct = Math.round(count / TOTAL_BOXES * 100);
+  const col = subj.color;
+
+  const card = document.getElementById('card-' + sid);
+  if (card) {
+    card.className = 'subject-card' + (allDone ? ' all-done' : '');
+  }
+
+  const icon = document.getElementById('icon-' + sid);
+  if (icon) {
+    icon.innerHTML = subj.emoji + (allDone ? '<span class="done-badge">✓</span>' : '');
+    icon.style.background = allDone ? col + '30' : 'rgba(255,255,255,0.06)';
+  }
+
+  const revCnt = document.getElementById('revcnt-' + sid);
+  if (revCnt) {
+    const c = count === 0 ? '#4B5563' : count === TOTAL_BOXES ? '#34D399' : '#FBBF24';
+    revCnt.innerHTML = `Revised <span style="color:${c};font-weight:900">${count}</span> / ${TOTAL_BOXES} times`;
+  }
+
+  const pctEl = document.getElementById('pct-' + sid);
+  if (pctEl) {
+    const c = count === 0 ? '#4B5563' : count === TOTAL_BOXES ? '#34D399' : col;
+    pctEl.style.color = c;
+    pctEl.textContent = pct + '%';
+  }
+
+  for (let i = 0; i < TOTAL_BOXES; i++) {
+    const box = document.getElementById(`box-${sid}-${i}`);
+    if (box) {
+      const ticked = !!progress[`${sid}_r${i}`];
+      box.className = 'rev-box' + (ticked ? ' ticked' : '');
+      box.style.background = ticked ? col : 'rgba(255,255,255,0.03)';
+      box.style.borderColor = ticked ? col : 'rgba(255,255,255,0.12)';
+      box.textContent = ticked ? '✓' : '';
+    }
+  }
+
+  const fill = document.getElementById('mbar-' + sid);
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.style.background = allDone ? '#34D399' : `linear-gradient(90deg, ${col}, ${col}88)`;
+  }
+}
+
+function updateOverall() {
+  let totalBoxes = ALL.length * TOTAL_BOXES;
+  let totalDone = ALL.reduce((sum, s) => sum + getRevCount(s.id), 0);
+  const pct = Math.round(totalDone / totalBoxes * 100);
+
+  const bar = document.getElementById('overall-bar');
+  const pe = document.getElementById('overall-pct');
+  if (bar) bar.style.width = pct + '%';
+  if (pe) pe.textContent = pct + '%';
+
+  const fullRevised = ALL.filter(s => getRevCount(s.id) === TOTAL_BOXES).length;
+  const statsEl = document.getElementById('stats');
+  if (statsEl) {
+    statsEl.innerHTML = [
+      { label: 'P1 Subjects', val: PAPER1.length, color: '#818CF8' },
+      { label: 'P2 Subjects', val: PAPER2.length, color: '#F472B6' },
+      { label: 'Fully Done', val: fullRevised, color: '#34D399' },
+      { label: 'Revisions', val: `${totalDone}/${totalBoxes}`, color: '#FBBF24' },
+    ].map(s => `<div class="stat-box" style="border-color:${s.color}25">
+      <div class="stat-val" style="color:${s.color}">${s.val}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>`).join('');
+  }
+}
+
+function buildCard(subj) {
+  const count = getRevCount(subj.id);
+  const allDone = count === TOTAL_BOXES;
+  const pct = Math.round(count / TOTAL_BOXES * 100);
+  const col = subj.color;
+  const mc = count === 0 ? '#4B5563' : count === TOTAL_BOXES ? '#34D399' : '#FBBF24';
+
+  const boxes = Array.from({ length: TOTAL_BOXES }, (_, i) => {
+    const ticked = !!progress[`${subj.id}_r${i}`];
+    return `<div class="rev-box ${ticked ? 'ticked' : ''}" id="box-${subj.id}-${i}"
+      style="background:${ticked ? col : 'rgba(255,255,255,0.03)'};border-color:${ticked ? col : 'rgba(255,255,255,0.12)'}"
+      onclick="toggleBox('${subj.id}',${i})" title="Revision ${i + 1}">${ticked ? '✓' : ''}</div>`;
+  }).join('');
+
+  const nums = Array.from({ length: TOTAL_BOXES }, (_, i) =>
+    `<div class="box-num">${i + 1}</div>`
+  ).join('');
+
+  return `<div class="subject-card ${allDone ? 'all-done' : ''}" id="card-${subj.id}">
+    <div class="card-top">
+      <div class="subject-icon" id="icon-${subj.id}" style="background:${allDone ? col + '30' : 'rgba(255,255,255,0.06)'}">
+        ${subj.emoji}${allDone ? '<span class="done-badge">✓</span>' : ''}
+      </div>
+      <div class="card-info">
+        <div class="subject-name">${subj.name}</div>
+        <div class="rev-count" id="revcnt-${subj.id}">Revised <span style="color:${mc};font-weight:900">${count}</span> / ${TOTAL_BOXES} times</div>
+      </div>
+      <div class="card-pct" id="pct-${subj.id}" style="color:${count===0?'#4B5563':count===TOTAL_BOXES?'#34D399':col}">${pct}%</div>
+    </div>
+    <div class="boxes-grid">${boxes}</div>
+    <div class="rev-box-label">${nums}</div>
+    <div class="card-actions">
+      <div class="mini-bar-track" style="flex:1">
+        <div class="mini-bar-fill" id="mbar-${subj.id}" style="width:${pct}%;background:${allDone ? '#34D399' : `linear-gradient(90deg,${col},${col}88)`}"></div>
+      </div>
+      <button class="reset-btn" onclick="resetSubject('${subj.id}')">↺ Reset</button>
+    </div>
+  </div>`;
+}
+
+function render() {
+  document.getElementById('paper1-list').innerHTML = PAPER1.map(buildCard).join('');
+  document.getElementById('paper2-list').innerHTML = PAPER2.map(buildCard).join('');
+}
+
+render();
+updateOverall();
+</script>
+</body>
+</html>

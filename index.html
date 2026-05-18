@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESE Civil Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'DM Sans',sans-serif;
+background:#08090E;
+color:white;
+padding:20px;
+min-height:100vh;
+}
+
+h1{
+font-size:28px;
+font-weight:900;
+margin-bottom:10px;
+}
+
+.sub{
+color:#6B7280;
+margin-bottom:30px;
+}
+
+.grid{
+display:grid;
+gap:20px;
+}
+
+.card{
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:18px;
+padding:24px;
+text-decoration:none;
+color:white;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+border-color:#6366F1;
+}
+
+.icon{
+font-size:40px;
+margin-bottom:14px;
+}
+
+.card h2{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:14px;
+color:#9CA3AF;
+line-height:1.5;
+}
+</style>
+</head>
+
+<body>
+
+<h1>ESE Civil Engineering Dashboard</h1>
+
+<div class="sub">
+Track syllabus, chapters and revisions easily.
+</div>
+
+<div class="grid">
+
+<a class="card" href="gs-planner.html">
+<div class="icon">📘</div>
+<h2>GS Paper 1 Planner</h2>
+<p>Track General Studies & Aptitude preparation.</p>
+</a>
+
+<a class="card" href="civil-paper2.html">
+<div class="icon">🏗️</div>
+<h2>Civil Paper 2 Planner</h2>
+<p>Track Civil Engineering subject completion.</p>
+</a>
+
+<a class="card" href="revision-chart.html">
+<div class="icon">📋</div>
+<h2>Revision Tracker</h2>
+<p>Track multiple revisions visually.</p>
+</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESE Prelims GS Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #08090E; color: #fff; font-family: 'DM Sans', sans-serif; min-height: 100vh; padding-bottom: 40px; }
+
+.header {
+  background: linear-gradient(160deg, #0f0c29, #1a1a2e, #16213e);
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-label { font-size: 10px; color: #6366F1; font-weight: 800; letter-spacing: 3px; margin-bottom: 4px; }
+.header h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 14px; }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.stat-box { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 7px 12px; border: 1px solid rgba(255,255,255,0.08); }
+.stat-val { font-size: 16px; font-weight: 900; line-height: 1; }
+.stat-label { font-size: 9px; color: #4B5563; font-weight: 700; letter-spacing: 1px; margin-top: 2px; }
+.overall-progress { margin-top: 14px; }
+.progress-header { display: flex; justify-content: space-between; font-size: 11px; color: #6B7280; margin-bottom: 6px; font-weight: 600; }
+.progress-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #6366F1, #F472B6); transition: width 0.4s ease; }
+
+.main { max-width: 720px; margin: 0 auto; padding: 16px; }
+.search-box { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; }
+.search-box::placeholder { color: #4B5563; }
+.count-label { font-size: 11px; color: #374151; font-weight: 600; margin-bottom: 10px; }
+
+.subject-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; margin-bottom: 8px; overflow: hidden; transition: border-color 0.2s; }
+.subject-card.completed { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.05); }
+
+.subject-header { padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+.subject-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; position: relative; }
+.done-tick { position: absolute; top: -4px; right: -4px; background: #6366F1; border-radius: 99px; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-size: 8px; }
+
+.subject-info { flex: 1; }
+.subject-name { font-size: 14px; font-weight: 800; }
+.subject-meta { font-size: 10px; color: #6B7280; margin-top: 2px; }
+.subject-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.mini-prog { font-size: 11px; font-weight: 800; }
+.arrow { font-size: 11px; color: #4B5563; }
+
+.subject-detail { display: none; padding: 0 14px 14px; flex-direction: column; gap: 6px; }
+.subject-detail.open { display: flex; }
+
+.day-prog-header { display: flex; justify-content: space-between; font-size: 10px; color: #6B7280; margin-bottom: 4px; }
+.day-prog-track { background: rgba(255,255,255,0.07); border-radius: 99px; height: 5px; overflow: hidden; margin-bottom: 10px; }
+.day-prog-fill { height: 100%; border-radius: 99px; transition: width 0.3s ease; }
+
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 7px 10px; border-radius: 8px; background: rgba(255,255,255,0.02); margin-bottom: 4px; }
+.custom-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.2s; font-size: 10px; margin-top: 1px; }
+.custom-check.checked { border-color: transparent; }
+.check-name { font-size: 12px; font-weight: 600; flex: 1; line-height: 1.3; }
+.check-name.done-text { text-decoration: line-through; opacity: 0.4; }
+.ch-num { font-size: 9px; font-weight: 800; opacity: 0.5; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="max-width:720px;margin:0 auto">
+    <div class="header-label">UPSC ESE PRELIMS • GENERAL STUDIES PAPER 1</div>
+    <h1>GS + Aptitude Chapter Tracker 📚</h1>
+    <div class="stats" id="stats"></div>
+    <div class="overall-progress">
+      <div class="progress-header"><span>Overall Progress</span><span id="overall-pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="overall-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <input class="search-box" id="search" placeholder="🔍  Search subject or chapter..." oninput="renderAll()">
+  <div class="count-label" id="count-label"></div>
+  <div id="subjects-list"></div>
+</div>
+
+<script>
+const SUBJECTS = [
+  {
+    id: 'math', name: 'Engineering Mathematics', emoji: '📐', color: '#818CF8',
+    chapters: [
+      'Linear Algebra',
+      'Calculus',
+      'Vector Calculus',
+      'Differential Equations',
+      'Complex Functions',
+      'Probability and Statistics',
+      'Numerical Method',
+      'Laplace Transforms',
+      'Fourier Series',
+      'Partial Differential Equations',
+    ]
+  },
+  {
+    id: 'energy', name: 'Basics of Energy & Environment', emoji: '🌱', color: '#4ADE80',
+    chapters: [
+      'Energy Resources: Conservation & Utilisation',
+      'Basics of Environment, Ecology & Ecosystem',
+      'Biodiversity & its Conservation',
+      'Environmental Degradation & Pollution',
+      'Global Warming & Climate Change',
+      'Environmental Impact Assessment (EIA)',
+      'Sustainable Development & Habitat Norms',
+      'Disasters & their Management',
+    ]
+  },
+  {
+    id: 'design', name: 'General Principles of Design, Drawing & Safety', emoji: '✏️', color: '#FBBF24',
+    chapters: [
+      // General Principles of Design
+      'Engineering Design Process',
+      'Problem Definition & Information Gathering',
+      'Generate Multiple Solutions',
+      'Analyse and Select a Solution',
+      'Embodiment Design & Detail Design',
+      // General Principles of Drawing
+      'Introductory Concepts',
+      'Scales',
+      'Engineering Curves',
+      'Conic Sections',
+      'Projection Methods',
+      'Projection of Points',
+      'Projection of Straight Lines',
+      'Projection of Planes',
+      'Projection of Solids & Isometric Projection',
+      'Section of Solids & Intersection of Surfaces',
+      'Development of Surfaces',
+      'Auto CAD',
+      // Importance of Safety
+      'Safety and its Importance',
+      'Accidents, Hazards and Risks',
+      'Work Study and Ergonomics',
+      'Fire Safety',
+      'Safety in Other Industries',
+    ]
+  },
+  {
+    id: 'matsci', name: 'Basics of Material Science & Engineering', emoji: '🔬', color: '#F97316',
+    chapters: [
+      'Introduction',
+      'Chemical Bonding',
+      'Crystallography',
+      'Electric Properties of Materials',
+      'Magnetic Properties of Materials',
+      'Ceramics',
+      'Polymers',
+      'Composites',
+      'Mechanical Properties of Materials',
+      'Ferrous Metals',
+      'Non-Ferrous Metals and Alloys',
+      'Introduction to Nanomaterial and Metamaterial',
+      'Basics of Corrosion, Creep & Heat Treatment',
+    ]
+  },
+  {
+    id: 'quality', name: 'Standards & Quality Practices', emoji: '✅', color: '#34D399',
+    chapters: [
+      'Quality',
+      'Different Approaches Regarding Quality',
+      'Quality Control Tools & Statistical Techniques in TQM',
+      'Sampling',
+      'Total Quality Management (TQM)',
+      'ISO Standards',
+      'Six Sigma',
+      'Inventory',
+      'Quality in Construction',
+      'Quality Practices in Services',
+      'Reliability and Maintenance',
+      'Miscellaneous (NDT & Inspection)',
+    ]
+  },
+  {
+    id: 'pm', name: 'Basics of Project Management', emoji: '📊', color: '#F472B6',
+    chapters: [
+      'Basic Concepts and Project Life Cycle',
+      'Project Organisation',
+      'Initiation Process: Project Formulation & Appraisal',
+      'Financial Analysis and Project Finances',
+      'Planning Process: Project Planning & Scheduling',
+      'Execution Process: Project Monitoring & Control',
+      'Project Closure & Termination: Post Audit',
+      'Tender and Contract',
+    ]
+  },
+  {
+    id: 'ict', name: 'Information & Communication Technologies', emoji: '💻', color: '#22D3EE',
+    chapters: [
+      'Introduction to ICT',
+      'ICT Based Tools (Computers)',
+      'Communication (Mobile, TV, Satellite)',
+      'Networking',
+      'e-Governance',
+      'Technology Based Education',
+      'Recent Development Related to ICT',
+    ]
+  },
+  {
+    id: 'ethics', name: 'Ethics & Values in Engineering Profession', emoji: '⚖️', color: '#C084FC',
+    chapters: [
+      'Meaning of Ethics',
+      'Ethical Theories',
+      'Human Values',
+      'Values in Engineering Profession',
+      'Ethical Issues, Dilemmas, Value Conflicts & Unethical Behaviour',
+      'Responsibilities of Engineers',
+      'Environmental Ethics: Responsibility of Engineers towards Environment',
+      'Codes of Conduct',
+    ]
+  },
+  {
+    id: 'reasoning', name: 'Reasoning & Aptitude', emoji: '🧠', color: '#FB923C',
+    chapters: [
+      'Number System',
+      'Percentage',
+      'Profit and Loss',
+      'Simple Interest & Compound Interest',
+      'Ratio and Proportion',
+      'Average',
+      'Time and Work',
+      'Time, Speed and Distance',
+      'Progression',
+      'Probability',
+      'Set Theory',
+      'Blood Relationship',
+      'Directions',
+      'Analytical Reasoning',
+      'Principles of Equation',
+      'Area and Volume',
+    ]
+  },
+  {
+    id: 'current', name: 'Current Issues of National & International Importance', emoji: '🌏', color: '#FB7185',
+    chapters: [
+      'Current Issues of National & International Importance',
+    ]
+  },
+];
+
+function getProgress() { try { return JSON.parse(localStorage.getItem('eseGSProgress') || '{}'); } catch { return {}; } }
+function saveProgress(p) { try { localStorage.setItem('eseGSProgress', JSON.stringify(p)); } catch {} }
+let progress = getProgress();
+
+function getCheckId(subjectId, chIdx) { return `${subjectId}_c${chIdx}`; }
+
+function getSubjectStats(subject) {
+  let total = subject.chapters.length, done = 0;
+  subject.chapters.forEach((c, i) => { if (progress[getCheckId(subject.id, i)]) done++; });
+  return { total, done };
+}
+
+function toggleCheck(subjectId, chIdx) {
+  const id = getCheckId(subjectId, chIdx);
+  progress[id] = !progress[id];
+  saveProgress(progress);
+  updateSubjectCard(subjectId);
+  updateOverall();
+}
+
+function updateOverall() {
+  let total = 0, done = 0;
+  SUBJECTS.forEach(s => { const st = getSubjectStats(s); total += st.total; done += st.done; });
+  const pct = total === 0 ? 0 : Math.round(done / total * 100);
+  const bar = document.getElementById('overall-bar');
+  const pctEl = document.getElementById('overall-pct');
+  if (bar) bar.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  renderStats(done, total);
+}
+
+function renderStats(done, total) {
+  const el = document.getElementById('stats');
+  if (!el) return;
+  const subDone = SUBJECTS.filter(s => { const st = getSubjectStats(s); return st.done === st.total; }).length;
+  el.innerHTML = [
+    { label: 'Total Subjects', val: SUBJECTS.length, color: '#FBBF24' },
+    { label: 'Subjects Done', val: subDone, color: '#34D399' },
+    { label: 'Chapters Done', val: `${done}/${total}`, color: '#818CF8' },
+    { label: 'Overall', val: `${Math.round(done/total*100||0)}%`, color: '#F472B6' },
+  ].map(s => `<div class="stat-box" style="border-color:${s.color}25">
+    <div class="stat-val" style="color:${s.color}">${s.val}</div>
+    <div class="stat-label">${s.label}</div>
+  </div>`).join('');
+}
+
+function updateSubjectCard(subjectId) {
+  const subject = SUBJECTS.find(s => s.id === subjectId);
+  if (!subject) return;
+  const { total, done } = getSubjectStats(subject);
+  const allDone = done === total;
+  const pct = Math.round(done / total * 100);
+  const col = subject.color;
+
+  const card = document.getElementById('card-' + subjectId);
+  if (card) card.className = 'subject-card' + (allDone ? ' completed' : '');
+
+  const icon = document.getElementById('icon-' + subjectId);
+  if (icon) {
+    icon.innerHTML = subject.emoji + (allDone ? '<span class="done-tick">✓</span>' : '');
+    icon.style.background = allDone ? col + '30' : 'rgba(255,255,255,0.06)';
+  }
+
+  const mini = document.getElementById('mini-' + subjectId);
+  if (mini) {
+    const c = allDone ? '#34D399' : done > 0 ? '#FBBF24' : '#4B5563';
+    mini.innerHTML = `<span style="color:${c}">${done}/${total}</span>`;
+  }
+
+  const fill = document.getElementById('fill-' + subjectId);
+  const pctEl = document.getElementById('pct-' + subjectId);
+  if (fill) { fill.style.width = pct + '%'; fill.style.background = allDone ? '#34D399' : `linear-gradient(90deg,${col},${col}88)`; }
+  if (pctEl) pctEl.textContent = pct + '%';
+
+  subject.chapters.forEach((ch, i) => {
+    const id = getCheckId(subjectId, i);
+    const box = document.getElementById('box-' + id);
+    const nameEl = document.getElementById('name-' + id);
+    if (box) {
+      const checked = !!progress[id];
+      box.className = 'custom-check' + (checked ? ' checked' : '');
+      box.style.background = checked ? col : 'transparent';
+      box.style.borderColor = checked ? col : 'rgba(255,255,255,0.15)';
+      box.innerHTML = checked ? '✓' : '';
+    }
+    if (nameEl) nameEl.className = 'check-name' + (progress[id] ? ' done-text' : '');
+  });
+}
+
+function buildSubjectHTML(subject) {
+  const { total, done } = getSubjectStats(subject);
+  const allDone = done === total;
+  const pct = Math.round(done / total * 100);
+  const col = subject.color;
+  const miniColor = allDone ? '#34D399' : done > 0 ? '#FBBF24' : '#4B5563';
+
+  const rowsHTML = subject.chapters.map((ch, i) => {
+    const id = getCheckId(subject.id, i);
+    const checked = !!progress[id];
+    return `<div class="checkbox-row">
+      <div class="custom-check ${checked ? 'checked' : ''}" id="box-${id}"
+        style="background:${checked ? col : 'transparent'};border-color:${checked ? col : 'rgba(255,255,255,0.15)'}"
+        onclick="toggleCheck('${subject.id}',${i});event.stopPropagation()">
+        ${checked ? '✓' : ''}
+      </div>
+      <div style="flex:1">
+        <div class="check-name ${checked ? 'done-text' : ''}" id="name-${id}">${ch}</div>
+        <div class="ch-num">Chapter ${i + 1}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="subject-card ${allDone ? 'completed' : ''}" id="card-${subject.id}">
+    <div class="subject-header" onclick="toggleSubject('${subject.id}')">
+      <div class="subject-icon" id="icon-${subject.id}" style="background:${allDone ? col+'30' : 'rgba(255,255,255,0.06)'}">
+        ${subject.emoji}${allDone ? '<span class="done-tick">✓</span>' : ''}
+      </div>
+      <div class="subject-info">
+        <div class="subject-name">${subject.name}</div>
+        <div class="subject-meta">${total} chapters</div>
+      </div>
+      <div class="subject-right">
+        <span class="mini-prog" id="mini-${subject.id}"><span style="color:${miniColor}">${done}/${total}</span></span>
+        <span class="arrow" id="arr-${subject.id}">▼</span>
+      </div>
+    </div>
+    <div class="subject-detail" id="detail-${subject.id}">
+      <div>
+        <div class="day-prog-header"><span>Progress</span><span id="pct-${subject.id}">${pct}%</span></div>
+        <div class="day-prog-track">
+          <div class="day-prog-fill" id="fill-${subject.id}" style="width:${pct}%;background:${allDone ? '#34D399' : `linear-gradient(90deg,${col},${col}88)`}"></div>
+        </div>
+      </div>
+      ${rowsHTML}
+    </div>
+  </div>`;
+}
+
+function toggleSubject(id) {
+  const detail = document.getElementById('detail-' + id);
+  const arr = document.getElementById('arr-' + id);
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  arr.textContent = isOpen ? '▼' : '▲';
+}
+
+function renderAll() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const filtered = SUBJECTS.filter(s => {
+    if (!q) return true;
+    if (s.name.toLowerCase().includes(q)) return true;
+    return s.chapters.some(ch => ch.toLowerCase().includes(q));
+  });
+  document.getElementById('count-label').textContent = filtered.length + ' / ' + SUBJECTS.length + ' subjects • Tap to expand';
+  document.getElementById('subjects-list').innerHTML = filtered.map(buildSubjectHTML).join('');
+}
+
+renderAll();
+updateOverall();
+</script>
+</body>
+</html>
