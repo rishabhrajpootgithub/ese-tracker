@@ -3,136 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ESE Civil Dashboard</title>
-
+<title>IES Rishabh Rajpoot</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #08090E; color: #fff; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 999;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px;
+  background: rgba(8,9,14,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.user-name { font-size: 13px; font-weight: 700; color: #9CA3AF; }
+.login-btn {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  color: white; border: none; padding: 9px 18px;
+  border-radius: 10px; font-weight: 800; cursor: pointer;
+  font-family: inherit; font-size: 13px; transition: opacity 0.2s;
+}
+.login-btn:hover { opacity: 0.85; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(160deg, #0f0c29, #1a1a2e, #16213e);
+  padding: 40px 20px 36px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.13), transparent 70%);
+  top: -100px; right: -80px; pointer-events: none;
+}
+.hero::after {
+  content: ''; position: absolute;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,114,182,0.09), transparent 70%);
+  bottom: -70px; left: -50px; pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 1; }
+
+.greeting { font-size: 13px; font-weight: 700; color: #6B7280; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+.hero-name {
+  font-size: 36px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 4px;
+}
+.hero-name .first { color: #fff; }
+.hero-name .last {
+  background: linear-gradient(90deg, #818CF8, #F472B6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 
-body{
-font-family:'DM Sans',sans-serif;
-background:#08090E;
-color:white;
-padding:20px;
-min-height:100vh;
+.ies-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(244,114,182,0.12));
+  border: 1px solid rgba(129,140,248,0.35);
+  border-radius: 12px; padding: 10px 18px; margin: 16px auto 20px;
+}
+.ies-badge-icon { font-size: 22px; }
+.ies-badge-title { font-size: 15px; font-weight: 900; color: #fff; }
+.ies-badge-sub { font-size: 10px; color: #818CF8; font-weight: 700; letter-spacing: 1px; margin-top: 2px; }
+
+/* STATS ROW */
+.hero-stats { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.hero-stat {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 10px 18px; text-align: center; min-width: 80px;
+}
+.hero-stat-val { font-size: 22px; font-weight: 900; line-height: 1; }
+.hero-stat-label { font-size: 9px; color: #4B5563; font-weight: 700; letter-spacing: 1px; margin-top: 3px; }
+
+/* MAIN */
+.main { max-width: 680px; margin: 0 auto; padding: 24px 16px 40px; }
+
+.section-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 2.5px;
+  color: #374151; margin-bottom: 12px; padding-left: 2px;
 }
 
-h1{
-font-size:28px;
-font-weight:900;
-margin-bottom:10px;
+/* NAV CARDS */
+.nav-card {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 16px 16px;
+  text-decoration: none; color: white;
+  margin-bottom: 10px;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s;
 }
+.nav-card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.04); }
 
-.sub{
-color:#6B7280;
-margin-bottom:30px;
+.card-icon-wrap {
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
 }
+.card-body { flex: 1; }
+.card-tag {
+  font-size: 9px; font-weight: 800; letter-spacing: 1px;
+  padding: 2px 8px; border-radius: 99px; margin-bottom: 4px;
+  display: inline-block;
+}
+.card-title { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+.card-desc { font-size: 11px; color: #6B7280; font-weight: 500; line-height: 1.4; }
+.card-arrow { font-size: 18px; color: #374151; flex-shrink: 0; font-weight: 900; }
 
-.grid{
-display:grid;
-gap:20px;
-}
+.card-gs { border-color: rgba(129,140,248,0.2); }
+.card-gs:hover { border-color: rgba(129,140,248,0.5); }
+.card-p2 { border-color: rgba(244,114,182,0.2); }
+.card-p2:hover { border-color: rgba(244,114,182,0.5); }
+.card-rev { border-color: rgba(52,211,153,0.2); }
+.card-rev:hover { border-color: rgba(52,211,153,0.5); }
 
-.card{
-background:rgba(255,255,255,0.04);
-border:1px solid rgba(255,255,255,0.08);
-border-radius:18px;
-padding:24px;
-text-decoration:none;
-color:white;
-transition:0.3s;
+/* QUOTE */
+.quote-box {
+  margin-top: 24px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(244,114,182,0.06));
+  border: 1px solid rgba(129,140,248,0.15);
+  border-radius: 14px; padding: 20px; text-align: center;
 }
-
-.card:hover{
-transform:translateY(-4px);
-border-color:#6366F1;
-}
-
-.icon{
-font-size:40px;
-margin-bottom:14px;
-}
-
-.card h2{
-font-size:20px;
-margin-bottom:8px;
-}
-
-.card p{
-font-size:14px;
-color:#9CA3AF;
-line-height:1.5;
-}
+.quote-text { font-size: 14px; color: #D1D5DB; line-height: 1.7; font-weight: 500; }
+.quote-text strong { color: #818CF8; }
+.quote-name { margin-top: 10px; font-size: 11px; font-weight: 800; color: #4B5563; letter-spacing: 1px; }
 </style>
 </head>
-
 <body>
 
-<div id="topbar" style="position:sticky;top:0;z-index:999;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#111827;border-bottom:1px solid rgba(255,255,255,0.08);">
-
-<div id="userName" style="font-size:13px;font-weight:700;color:white;">
-Not Logged In
+<div class="topbar">
+  <div class="user-name" id="userName">Not Logged In</div>
+  <button class="login-btn" id="loginBtn">Login with Google</button>
 </div>
 
-<button id="loginBtn" style="background:#6366F1;color:white;border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;">
-Login with Google
-</button>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="greeting">Welcome back,</div>
+    <div class="hero-name">
+      <span class="first">Rishabh </span><span class="last">Rajpoot</span>
+    </div>
 
+    <div class="ies-badge">
+      <div class="ies-badge-icon">🏛️</div>
+      <div>
+        <div class="ies-badge-title">IES Officer — In Progress</div>
+        <div class="ies-badge-sub">UPSC ESE 2027 • CIVIL ENGINEERING</div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#818CF8">2</div>
+        <div class="hero-stat-label">PAPERS</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#F472B6">32</div>
+        <div class="hero-stat-label">SUBJECTS</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#34D399">2027</div>
+        <div class="hero-stat-label">TARGET YEAR</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val" style="color:#FBBF24">IES</div>
+        <div class="hero-stat-label">GOAL</div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div class="main">
+  <div class="section-label">YOUR TRACKERS</div>
 
-<h1>ESE Civil Engineering Dashboard</h1>
+  <a class="nav-card card-gs" href="gs-planner.html">
+    <div class="card-icon-wrap" style="background:rgba(129,140,248,0.15)">📘</div>
+    <div class="card-body">
+      <div class="card-tag" style="background:rgba(129,140,248,0.15);color:#818CF8">PAPER 1 • GS & APTITUDE</div>
+      <div class="card-title">General Studies Planner</div>
+      <div class="card-desc">Mathematics, Ethics, ICT, Energy, Reasoning & more — 10 subjects</div>
+    </div>
+    <div class="card-arrow">›</div>
+  </a>
 
-<div class="sub">
-Track syllabus, chapters and revisions easily.
+  <a class="nav-card card-p2" href="civil-paper2.html">
+    <div class="card-icon-wrap" style="background:rgba(244,114,182,0.15)">🏗️</div>
+    <div class="card-body">
+      <div class="card-tag" style="background:rgba(244,114,182,0.15);color:#F472B6">PAPER 2 • CIVIL ENGINEERING</div>
+      <div class="card-title">Civil Engineering Planner</div>
+      <div class="card-desc">SOM, Structural, Fluid, Soil, Highway & more — 22 subjects</div>
+    </div>
+    <div class="card-arrow">›</div>
+  </a>
+
+  <a class="nav-card card-rev" href="revision-chart.html">
+    <div class="card-icon-wrap" style="background:rgba(52,211,153,0.15)">📋</div>
+    <div class="card-body">
+      <div class="card-tag" style="background:rgba(52,211,153,0.15);color:#34D399">REVISION TRACKER</div>
+      <div class="card-title">Revision Chart</div>
+      <div class="card-desc">12 revision boxes per subject — visualise how many times revised</div>
+    </div>
+    <div class="card-arrow">›</div>
+  </a>
+
+  <div class="quote-box">
+    <div class="quote-text">
+      "Har din ek step aage —<br>
+      <strong>IES Rishabh Rajpoot</strong> banna koi sapna nahi,<br>
+      ek <strong>scheduled plan</strong> hai." 📐
+    </div>
+    <div class="quote-name">— RISHABH RAJPOOT • ESE CIVIL 2027</div>
+  </div>
 </div>
-
-<div class="grid">
-
-<a class="card" href="gs-planner.html">
-<div class="icon">📘</div>
-<h2>GS Paper 1 Planner</h2>
-<p>Track General Studies & Aptitude preparation.</p>
-</a>
-
-<a class="card" href="civil-paper2.html">
-<div class="icon">🏗️</div>
-<h2>Civil Paper 2 Planner</h2>
-<p>Track Civil Engineering subject completion.</p>
-</a>
-
-<a class="card" href="revision-chart.html">
-<div class="icon">📋</div>
-<h2>Revision Tracker</h2>
-<p>Track multiple revisions visually.</p>
-</a>
-
-</div>
-
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXuhaiC2uIZnIF5KVHIVRljzHyN7O5SEA",
@@ -140,120 +229,32 @@ const firebaseConfig = {
   projectId: "tracker-6629e",
   storageBucket: "tracker-6629e.firebasestorage.app",
   messagingSenderId: "811549120359",
-  appId: "1:811549120359:web:9af3d850a5eb9096ca41c2",
-  measurementId: "G-TL0ZDG45RT"
+  appId: "1:811549120359:web:9af3d850a5eb9096ca41c2"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
-
 const loginBtn = document.getElementById('loginBtn');
 const userName = document.getElementById('userName');
-
 let currentUser = null;
 
 loginBtn?.addEventListener('click', async () => {
-
-  if(currentUser){
-    await signOut(auth);
-    return;
-  }
-
-  try {
-    await signInWithPopup(auth, provider);
-  } catch(err){
-    alert(err.message);
-  }
-
+  if (currentUser) { await signOut(auth); return; }
+  try { await signInWithPopup(auth, provider); } catch(err) { alert(err.message); }
 });
 
-onAuthStateChanged(auth, async (user) => {
-
-  if(user){
-
+onAuthStateChanged(auth, (user) => {
+  if (user) {
     currentUser = user;
-
-    if(userName) userName.textContent = user.displayName;
-
-    if(loginBtn) loginBtn.textContent = 'Logout';
-
-    await loadCloudData();
-
+    if (userName) userName.textContent = '👤 ' + user.displayName;
+    if (loginBtn) loginBtn.textContent = 'Logout';
   } else {
-
     currentUser = null;
-
-    if(userName) userName.textContent = 'Not Logged In';
-
-    if(loginBtn) loginBtn.textContent = 'Login with Google';
+    if (userName) userName.textContent = 'Not Logged In';
+    if (loginBtn) loginBtn.textContent = 'Login with Google';
   }
-
 });
-
-async function saveCloudData(){
-
-  if(!currentUser || typeof progress === 'undefined') return;
-
-  try {
-
-    const ref = doc(db, 'users', currentUser.uid);
-
-    await setDoc(ref, {
-      progress
-    });
-
-  } catch(err){
-    console.log(err);
-  }
-
-}
-
-async function loadCloudData(){
-
-  if(!currentUser) return;
-
-  try {
-
-    const ref = doc(db, 'users', currentUser.uid);
-
-    const snap = await getDoc(ref);
-
-    if(snap.exists()){
-
-      const data = snap.data();
-
-      if(data.progress){
-
-        progress = data.progress;
-
-        if(typeof renderAll === 'function') renderAll();
-        if(typeof render === 'function') render();
-        if(typeof updateOverall === 'function') updateOverall();
-
-      }
-
-    }
-
-  } catch(err){
-    console.log(err);
-  }
-
-}
-
-if (typeof saveProgress === 'function') {
-  const originalSaveProgress = saveProgress;
-
-  saveProgress = function(p){
-
-    originalSaveProgress(p);
-
-    saveCloudData();
-
-  }
-}
-
 </script>
 
 </body>
