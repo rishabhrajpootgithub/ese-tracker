@@ -136,7 +136,6 @@ body {
   display: block;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
-  font-style: normal;
   font-size: clamp(52px, 14vw, 104px);
   letter-spacing: 6px;
   color: #fff;
@@ -149,7 +148,6 @@ body {
   display: block;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
-  font-style: normal;
   font-size: clamp(52px, 14vw, 104px);
   letter-spacing: 6px;
   text-transform: uppercase;
@@ -174,7 +172,7 @@ body {
   color: white; padding: 11px 30px;
   border-radius: 12px; font-weight: 800; cursor: pointer;
   font-family: 'DM Sans', sans-serif; font-size: 13px;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.3s, transform 0.2s, color 0.3s, border-color 0.3s;
   animation: fadeUp 1s ease 0.55s both;
   letter-spacing: 0.3px;
   display: inline-flex; align-items: center; gap: 8px;
@@ -212,119 +210,7 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* TRACKER CARDS */
-.tracker-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0 16px 20px;
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.tcard {
-  position: relative;
-  width: 100%;
-  border-radius: 22px;
-  padding: 20px 16px 18px 18px;
-  text-decoration: none;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  overflow: hidden;
-  border: 1px solid var(--tc-border);
-  background: var(--tc-bg);
-  transition: transform 0.22s, box-shadow 0.22s;
-}
-.tcard:hover { transform: translateY(-3px); box-shadow: 0 16px 48px var(--tc-shadow); }
-.tcard:active { transform: scale(0.98); }
-
-.tcard-glow {
-  position: absolute;
-  width: 180px; height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--tc-glow) 0%, transparent 70%);
-  top: -60px; right: -40px;
-  pointer-events: none; z-index: 0;
-}
-.tcard > *:not(.tcard-glow) { position: relative; z-index: 1; }
-
-.tcard-left { flex-shrink: 0; }
-.tcard-icon {
-  font-size: 40px;
-  display: block;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
-}
-
-.tcard-body { flex: 1; min-width: 0; }
-
-.tcard-badge {
-  font-size: 9px; font-weight: 800; letter-spacing: 1.2px;
-  color: var(--tc-color);
-  text-transform: uppercase;
-  margin-bottom: 5px;
-  display: block;
-}
-.tcard-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 17px; font-weight: 900;
-  line-height: 1.2;
-  margin-bottom: 5px;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tcard-desc {
-  font-size: 10px;
-  color: rgba(255,255,255,0.38);
-  line-height: 1.5;
-  margin-bottom: 6px;
-}
-.tcard-meta {
-  font-size: 10px;
-  color: rgba(255,255,255,0.28);
-  font-weight: 600;
-}
-.tcard-count-num {
-  font-size: 13px; font-weight: 900;
-  font-family: 'Syne', sans-serif;
-  color: var(--tc-color);
-}
-
-.tcard-arrow {
-  font-size: 22px;
-  color: var(--tc-color);
-  flex-shrink: 0;
-  font-weight: 900;
-  opacity: 0.6;
-  transition: opacity 0.2s, transform 0.2s;
-}
-.tcard:hover .tcard-arrow { opacity: 1; transform: translateX(3px); }
-
-.tcard-gs {
-  --tc-bg: linear-gradient(135deg, rgba(99,102,241,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(129,140,248,0.22);
-  --tc-color: #818CF8;
-  --tc-glow: rgba(99,102,241,0.28);
-  --tc-shadow: rgba(99,102,241,0.18);
-}
-.tcard-civil {
-  --tc-bg: linear-gradient(135deg, rgba(244,114,182,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(244,114,182,0.22);
-  --tc-color: #F472B6;
-  --tc-glow: rgba(244,114,182,0.28);
-  --tc-shadow: rgba(244,114,182,0.18);
-}
-.tcard-rev {
-  --tc-bg: linear-gradient(135deg, rgba(52,211,153,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(52,211,153,0.22);
-  --tc-color: #34D399;
-  --tc-glow: rgba(52,211,153,0.28);
-  --tc-shadow: rgba(52,211,153,0.18);
-}
-
+/* STATS BAR */
 .stats-bar {
   display: flex; gap: 0;
   background: rgba(255,255,255,0.03);
@@ -381,10 +267,121 @@ body {
 .cd-pre { --c1:#818CF8; --c2:#6366F1; --cb:rgba(129,140,248,0.25); --cl:#818CF8; }
 .cd-mains { --c1:#F472B6; --c2:#DB2777; --cb:rgba(244,114,182,0.25); --cl:#F472B6; }
 
+/* TRACKER CARDS */
 .main { max-width: 680px; margin: 0 auto; padding: 24px 16px 16px; }
 .section-label {
   font-size: 9px; font-weight: 800; letter-spacing: 3px;
   color: #374151; margin-bottom: 12px; padding-left: 2px; text-transform:uppercase;
+}
+
+.tracker-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 20px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.tcard {
+  position: relative;
+  width: 100%;
+  border-radius: 22px;
+  padding: 20px 16px 18px 18px;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  border: 1px solid var(--tc-border);
+  background: var(--tc-bg);
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+.tcard:hover { transform: translateY(-3px); box-shadow: 0 16px 48px var(--tc-shadow); }
+.tcard:active { transform: scale(0.98); }
+
+.tcard-glow {
+  position: absolute;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tc-glow) 0%, transparent 70%);
+  top: -60px; right: -40px;
+  pointer-events: none; z-index: 0;
+}
+.tcard > *:not(.tcard-glow) { position: relative; z-index: 1; }
+
+.tcard-left { flex-shrink: 0; }
+.tcard-icon {
+  font-size: 40px;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+}
+
+.tcard-body { flex: 1; min-width: 0; }
+.tcard-badge {
+  font-size: 9px; font-weight: 800; letter-spacing: 1.2px;
+  color: var(--tc-color);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
+}
+.tcard-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 5px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tcard-desc {
+  font-size: 10px;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.tcard-meta {
+  font-size: 10px;
+  color: rgba(255,255,255,0.28);
+  font-weight: 600;
+}
+.tcard-count-num {
+  font-size: 13px; font-weight: 900;
+  font-family: 'Syne', sans-serif;
+  color: var(--tc-color);
+}
+.tcard-arrow {
+  font-size: 22px;
+  color: var(--tc-color);
+  flex-shrink: 0;
+  font-weight: 900;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.tcard:hover .tcard-arrow { opacity: 1; transform: translateX(3px); }
+
+.tcard-gs {
+  --tc-bg: linear-gradient(135deg, rgba(99,102,241,0.16) 0%, rgba(6,8,16,0.92) 100%);
+  --tc-border: rgba(129,140,248,0.22);
+  --tc-color: #818CF8;
+  --tc-glow: rgba(99,102,241,0.28);
+  --tc-shadow: rgba(99,102,241,0.18);
+}
+.tcard-civil {
+  --tc-bg: linear-gradient(135deg, rgba(244,114,182,0.16) 0%, rgba(6,8,16,0.92) 100%);
+  --tc-border: rgba(244,114,182,0.22);
+  --tc-color: #F472B6;
+  --tc-glow: rgba(244,114,182,0.28);
+  --tc-shadow: rgba(244,114,182,0.18);
+}
+.tcard-rev {
+  --tc-bg: linear-gradient(135deg, rgba(52,211,153,0.16) 0%, rgba(6,8,16,0.92) 100%);
+  --tc-border: rgba(52,211,153,0.22);
+  --tc-color: #34D399;
+  --tc-glow: rgba(52,211,153,0.28);
+  --tc-shadow: rgba(52,211,153,0.18);
 }
 </style>
 </head>
@@ -499,13 +496,12 @@ body {
   </div>
 </div>
 
-<!-- MAIN -->
+<!-- TRACKER SECTION -->
 <div class="main">
   <div style="height:20px"></div>
   <div class="section-label">Your Trackers</div>
 </div>
 
-<!-- TRACKER CARDS -->
 <div class="tracker-vertical">
   <a class="tcard tcard-gs" href="gs-planner.html">
     <div class="tcard-glow"></div>
@@ -544,27 +540,30 @@ body {
   </a>
 </div>
 
-<div class="main" style="padding-bottom:40px;"></div>
+<div style="height:40px"></div>
 
 <script>
 /* STARS */
 const starsContainer = document.getElementById('pStars');
-for(let i=0;i<80;i++){
+for(let i = 0; i < 80; i++){
   const s = document.createElement('div');
   s.className = 'star';
-  const size = Math.random()*2.5+0.5;
+  const size = Math.random() * 2.5 + 0.5;
   s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*60}%;left:${Math.random()*100}%;opacity:${Math.random()*0.6+0.1};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
   starsContainer.appendChild(s);
 }
 
 /* COUNTDOWN */
-const targets = { pre: new Date('2027-02-01T09:00:00'), main: new Date('2027-06-15T09:00:00') };
+const targets = {
+  pre:  new Date('2027-02-01T09:00:00'),
+  main: new Date('2027-06-15T09:00:00')
+};
 function pad(n){ return String(n).padStart(2,'0'); }
 function updateCountdowns(){
   const now = Date.now();
   ['pre','main'].forEach(k => {
     const diff = targets[k] - now;
-    if(diff<=0) return;
+    if(diff <= 0) return;
     document.getElementById(k+'-d').textContent = pad(Math.floor(diff/86400000));
     document.getElementById(k+'-h').textContent = pad(Math.floor((diff%86400000)/3600000));
     document.getElementById(k+'-m').textContent = pad(Math.floor((diff%3600000)/60000));
@@ -574,9 +573,13 @@ updateCountdowns();
 setInterval(updateCountdowns, 30000);
 
 /* PARALLAX */
-const pBg=document.getElementById('pBg'), pStars=document.getElementById('pStars'),
-      pMountain=document.getElementById('pMountain'), pGlow=document.getElementById('pGlow'),
-      pFigure=document.getElementById('pFigure'), pGround=document.getElementById('pGround');
+const pBg       = document.getElementById('pBg');
+const pStars    = document.getElementById('pStars');
+const pMountain = document.getElementById('pMountain');
+const pGlow     = document.getElementById('pGlow');
+const pFigure   = document.getElementById('pFigure');
+const pGround   = document.getElementById('pGround');
+
 function onScroll(){
   const y = window.scrollY;
   pStars.style.transform    = `translateY(${y*0.15}px)`;
@@ -591,4 +594,57 @@ window.addEventListener('scroll', onScroll, { passive: true });
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, si
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBXuhaiC2uIZnIF5KVHIVRljzHyN7O5SEA",
+  authDomain: "tracker-6629e.firebaseapp.com",
+  projectId: "tracker-6629e",
+  storageBucket: "tracker-6629e.firebasestorage.app",
+  messagingSenderId: "811549120359",
+  appId: "1:811549120359:web:9af3d850a5eb9096ca41c2"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const heroLoginBtn = document.getElementById('heroLoginBtn');
+let currentUser = null;
+
+heroLoginBtn.addEventListener('click', async () => {
+  if (currentUser) {
+    await signOut(auth);
+    return;
+  }
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    alert(e.message);
+  }
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    heroLoginBtn.innerHTML = '✅ ' + user.displayName.split(' ')[0] + ' &bull; Logout';
+    heroLoginBtn.style.background = 'rgba(52,211,153,0.15)';
+    heroLoginBtn.style.borderColor = 'rgba(52,211,153,0.4)';
+    heroLoginBtn.style.color = '#34D399';
+  } else {
+    currentUser = null;
+    heroLoginBtn.innerHTML = '🔐 Login with Google';
+    heroLoginBtn.style.background = 'rgba(255,255,255,0.06)';
+    heroLoginBtn.style.borderColor = 'rgba(255,255,255,0.15)';
+    heroLoginBtn.style.color = '#fff';
+  }
+});
+</script>
+
+</body>
+</html>
