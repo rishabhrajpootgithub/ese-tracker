@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IES Rishabh Rajpoot</title>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Syne:wght@700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,6 +26,7 @@ body {
   overflow-x: hidden;
 }
 
+/* PARALLAX HERO */
 .parallax-wrap {
   position: relative;
   height: 100svh;
@@ -45,16 +46,6 @@ body {
     linear-gradient(180deg, #02030a 0%, #04060f 10%, #060818 20%, #070a1c 30%, #080c20 42%, #090d22 55%, #0a0e20 68%, #080c1a 80%, #060810 92%, #040608 100%);
   will-change: transform;
   z-index: 0;
-}
-
-.parallax-mountain {
-  position: absolute;
-  bottom: -5%;
-  left: 0; right: 0;
-  width: 100%;
-  height: 75%;
-  will-change: transform;
-  z-index: 1;
 }
 
 .parallax-stars {
@@ -77,8 +68,7 @@ body {
 
 .parallax-glow {
   position: absolute;
-  top: 28%;
-  left: 50%;
+  top: 28%; left: 50%;
   transform: translateX(-50%);
   width: 100px; height: 100px;
   border-radius: 50%;
@@ -93,18 +83,22 @@ body {
   100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
 }
 
+.parallax-mountain {
+  position: absolute;
+  bottom: -5%; left: 0; right: 0;
+  width: 100%; height: 75%;
+  will-change: transform;
+  z-index: 1;
+}
+
 .parallax-figure {
   position: absolute;
-  bottom: 14%;
-  left: 50%;
+  bottom: 14%; left: 50%;
   transform: translateX(-50%);
   z-index: 3;
   will-change: transform;
 }
-.parallax-figure svg {
-  width: 60px;
-  filter: drop-shadow(0 0 20px rgba(6,8,16,0.9));
-}
+.parallax-figure svg { width: 60px; filter: drop-shadow(0 0 20px rgba(6,8,16,0.9)); }
 
 .parallax-ground {
   position: absolute;
@@ -116,49 +110,33 @@ body {
 }
 
 .parallax-content {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
+  position: relative; z-index: 10;
+  text-align: center; padding: 0 20px;
+  display: flex; flex-direction: column; align-items: center;
 }
 
-.parallax-title {
-  text-align: center;
-  margin-bottom: 6px;
-  animation: fadeUp 1s ease 0.35s both;
-}
-
+.parallax-title { text-align: center; margin-bottom: 6px; animation: fadeUp 1s ease 0.35s both; }
 .parallax-title .t-first {
   display: block;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
   font-size: clamp(52px, 14vw, 104px);
-  letter-spacing: 6px;
-  color: #fff;
-  text-transform: uppercase;
-  line-height: 0.92;
+  letter-spacing: 6px; color: #fff;
+  text-transform: uppercase; line-height: 0.92;
   text-shadow: 0 2px 40px rgba(0,0,0,0.6);
 }
-
 .parallax-title .t-last {
   display: block;
   font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
   font-size: clamp(52px, 14vw, 104px);
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  line-height: 0.92;
-  color: #fff;
+  letter-spacing: 6px; color: #fff;
+  text-transform: uppercase; line-height: 0.92;
   text-shadow: 0 2px 40px rgba(0,0,0,0.6);
 }
 
 .name-rule {
-  width: 120px;
-  height: 1px;
+  width: 120px; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
   margin: 10px auto 14px;
   animation: fadeUp 1s ease 0.45s both;
@@ -180,31 +158,23 @@ body {
 .hero-login-btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
 
 .scroll-cue {
-  position: absolute;
-  bottom: 20px;
-  left: 0; right: 0;
-  margin: 0 auto;
-  width: fit-content;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  position: absolute; bottom: 20px; left: 0; right: 0;
+  margin: 0 auto; width: fit-content; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
   animation: fadeUp 1.2s ease 1s both;
 }
-.scroll-cue-text { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.3); text-transform:uppercase; }
+.scroll-cue-text { font-size: 9px; letter-spacing: 3px; color: rgba(255,255,255,0.3); text-transform: uppercase; }
 .scroll-cue-line {
   width: 1px; height: 40px;
   background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
   animation: scroll-line 2s ease-in-out infinite;
 }
 @keyframes scroll-line {
-  0% { transform: scaleY(0); transform-origin: top; }
-  50% { transform: scaleY(1); transform-origin: top; }
-  51% { transform: scaleY(1); transform-origin: bottom; }
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
   100% { transform: scaleY(0); transform-origin: bottom; }
 }
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -212,7 +182,7 @@ body {
 
 /* STATS BAR */
 .stats-bar {
-  display: flex; gap: 0;
+  display: flex;
   background: rgba(255,255,255,0.03);
   border-top: 1px solid rgba(255,255,255,0.06);
   border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -223,8 +193,8 @@ body {
   border-right: 1px solid rgba(255,255,255,0.05);
 }
 .stat-item:last-child { border-right: none; }
-.stat-val { font-size: 22px; font-weight: 900; font-family:'Syne',sans-serif; line-height:1; }
-.stat-lbl { font-size: 8px; color: #374151; font-weight: 700; letter-spacing: 1.5px; margin-top: 3px; text-transform:uppercase; }
+.stat-val { font-size: 22px; font-weight: 900; font-family: 'DM Sans', sans-serif; line-height: 1; }
+.stat-lbl { font-size: 8px; color: #374151; font-weight: 700; letter-spacing: 1.5px; margin-top: 3px; text-transform: uppercase; }
 
 /* COUNTDOWN */
 .countdowns {
@@ -236,63 +206,55 @@ body {
   flex: 1; border-radius: 20px; padding: 18px 14px 16px;
   text-align: center; position: relative; overflow: hidden;
   background: rgba(255,255,255,0.025);
+  border: 1px solid var(--cb);
   transition: transform 0.3s;
 }
 .countdown-card:hover { transform: translateY(-3px); }
 .countdown-card::before {
-  content:''; position:absolute; inset:0;
+  content: ''; position: absolute; inset: 0;
   background: linear-gradient(145deg, var(--c1), var(--c2));
-  opacity: 0.1; z-index:0;
+  opacity: 0.1; z-index: 0;
 }
-.countdown-card { border: 1px solid var(--cb); }
-.countdown-card > * { position: relative; z-index:1; }
+.countdown-card > * { position: relative; z-index: 1; }
 
-.cd-exam { font-size: 8px; font-weight: 800; letter-spacing: 2px; color: var(--cl); margin-bottom: 4px; text-transform:uppercase; }
-.cd-name { font-size: 13px; font-weight: 800; color:#fff; margin-bottom: 12px; font-family:'Syne',sans-serif; }
-.cd-blocks { display: flex; gap: 6px; justify-content:center; }
+.cd-exam { font-size: 8px; font-weight: 800; letter-spacing: 2px; color: var(--cl); margin-bottom: 4px; text-transform: uppercase; }
+.cd-name { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 12px; font-family: 'DM Sans', sans-serif; }
+.cd-blocks { display: flex; gap: 6px; justify-content: center; }
 .cd-block { background: rgba(0,0,0,0.35); border-radius: 10px; padding: 8px 6px 6px; min-width: 42px; }
-.cd-num { font-size: 24px; font-weight: 900; font-family:'Syne',sans-serif; color:var(--cl); line-height:1; }
-.cd-unit { font-size: 7px; font-weight: 700; color: #4B5563; letter-spacing: 1px; margin-top: 2px; text-transform:uppercase; }
+.cd-num { font-size: 24px; font-weight: 900; font-family: 'DM Sans', sans-serif; color: var(--cl); line-height: 1; }
+.cd-unit { font-size: 7px; font-weight: 700; color: #4B5563; letter-spacing: 1px; margin-top: 2px; text-transform: uppercase; }
 .cd-footer { margin-top: 10px; font-size: 9px; font-weight: 600; color: #374151; }
 
 .live-dot {
-  display:inline-block; width:6px; height:6px; border-radius:50%;
-  background: var(--cl); margin-right:5px;
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cl); margin-right: 5px;
   animation: pulse-dot 1.5s ease-in-out infinite;
 }
 @keyframes pulse-dot {
-  0%,100% { transform:scale(1); opacity:1; }
-  50% { transform:scale(1.7); opacity:0.5; }
+  0%,100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.7); opacity: 0.5; }
 }
-.cd-pre { --c1:#818CF8; --c2:#6366F1; --cb:rgba(129,140,248,0.25); --cl:#818CF8; }
+.cd-pre   { --c1:#818CF8; --c2:#6366F1; --cb:rgba(129,140,248,0.25); --cl:#818CF8; }
 .cd-mains { --c1:#F472B6; --c2:#DB2777; --cb:rgba(244,114,182,0.25); --cl:#F472B6; }
 
 /* TRACKER CARDS */
 .main { max-width: 680px; margin: 0 auto; padding: 24px 16px 16px; }
 .section-label {
   font-size: 9px; font-weight: 800; letter-spacing: 3px;
-  color: #374151; margin-bottom: 12px; padding-left: 2px; text-transform:uppercase;
+  color: #374151; margin-bottom: 12px; padding-left: 2px; text-transform: uppercase;
 }
 
 .tracker-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: flex; flex-direction: column; gap: 12px;
   padding: 0 16px 20px;
-  max-width: 680px;
-  margin: 0 auto;
+  max-width: 680px; margin: 0 auto;
 }
 
 .tcard {
-  position: relative;
-  width: 100%;
-  border-radius: 22px;
-  padding: 20px 16px 18px 18px;
-  text-decoration: none;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  position: relative; width: 100%;
+  border-radius: 22px; padding: 20px 16px 18px 18px;
+  text-decoration: none; color: #fff;
+  display: flex; align-items: center; gap: 16px;
   overflow: hidden;
   border: 1px solid var(--tc-border);
   background: var(--tc-bg);
@@ -302,92 +264,56 @@ body {
 .tcard:active { transform: scale(0.98); }
 
 .tcard-glow {
-  position: absolute;
-  width: 180px; height: 180px;
-  border-radius: 50%;
+  position: absolute; width: 180px; height: 180px; border-radius: 50%;
   background: radial-gradient(circle, var(--tc-glow) 0%, transparent 70%);
-  top: -60px; right: -40px;
-  pointer-events: none; z-index: 0;
+  top: -60px; right: -40px; pointer-events: none; z-index: 0;
 }
 .tcard > *:not(.tcard-glow) { position: relative; z-index: 1; }
 
-.tcard-left { flex-shrink: 0; }
-.tcard-icon {
-  font-size: 40px;
-  display: block;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
-}
-
+.tcard-icon { font-size: 40px; display: block; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4)); }
 .tcard-body { flex: 1; min-width: 0; }
 .tcard-badge {
   font-size: 9px; font-weight: 800; letter-spacing: 1.2px;
-  color: var(--tc-color);
-  text-transform: uppercase;
-  margin-bottom: 5px;
-  display: block;
+  color: var(--tc-color); text-transform: uppercase;
+  margin-bottom: 5px; display: block;
 }
 .tcard-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 17px; font-weight: 900;
-  line-height: 1.2;
-  margin-bottom: 5px;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px; font-weight: 900; line-height: 1.2;
+  margin-bottom: 5px; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.tcard-desc {
-  font-size: 10px;
-  color: rgba(255,255,255,0.38);
-  line-height: 1.5;
-  margin-bottom: 6px;
-}
-.tcard-meta {
-  font-size: 10px;
-  color: rgba(255,255,255,0.28);
-  font-weight: 600;
-}
-.tcard-count-num {
-  font-size: 13px; font-weight: 900;
-  font-family: 'Syne', sans-serif;
-  color: var(--tc-color);
-}
+.tcard-desc { font-size: 10px; color: rgba(255,255,255,0.38); line-height: 1.5; margin-bottom: 6px; }
+.tcard-meta { font-size: 10px; color: rgba(255,255,255,0.28); font-weight: 600; }
+.tcard-count-num { font-size: 13px; font-weight: 900; font-family: 'DM Sans', sans-serif; color: var(--tc-color); }
 .tcard-arrow {
-  font-size: 22px;
-  color: var(--tc-color);
-  flex-shrink: 0;
-  font-weight: 900;
-  opacity: 0.6;
+  font-size: 22px; color: var(--tc-color); flex-shrink: 0;
+  font-weight: 900; opacity: 0.6;
   transition: opacity 0.2s, transform 0.2s;
 }
 .tcard:hover .tcard-arrow { opacity: 1; transform: translateX(3px); }
 
 .tcard-gs {
   --tc-bg: linear-gradient(135deg, rgba(99,102,241,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(129,140,248,0.22);
-  --tc-color: #818CF8;
-  --tc-glow: rgba(99,102,241,0.28);
-  --tc-shadow: rgba(99,102,241,0.18);
+  --tc-border: rgba(129,140,248,0.22); --tc-color: #818CF8;
+  --tc-glow: rgba(99,102,241,0.28); --tc-shadow: rgba(99,102,241,0.18);
 }
 .tcard-civil {
   --tc-bg: linear-gradient(135deg, rgba(244,114,182,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(244,114,182,0.22);
-  --tc-color: #F472B6;
-  --tc-glow: rgba(244,114,182,0.28);
-  --tc-shadow: rgba(244,114,182,0.18);
+  --tc-border: rgba(244,114,182,0.22); --tc-color: #F472B6;
+  --tc-glow: rgba(244,114,182,0.28); --tc-shadow: rgba(244,114,182,0.18);
 }
 .tcard-rev {
   --tc-bg: linear-gradient(135deg, rgba(52,211,153,0.16) 0%, rgba(6,8,16,0.92) 100%);
-  --tc-border: rgba(52,211,153,0.22);
-  --tc-color: #34D399;
-  --tc-glow: rgba(52,211,153,0.28);
-  --tc-shadow: rgba(52,211,153,0.18);
+  --tc-border: rgba(52,211,153,0.22); --tc-color: #34D399;
+  --tc-glow: rgba(52,211,153,0.28); --tc-shadow: rgba(52,211,153,0.18);
 }
 </style>
 </head>
 <body>
 
-<div class="parallax-wrap" id="parallaxWrap">
+<!-- HERO -->
+<div class="parallax-wrap">
   <div class="parallax-stars" id="pStars"></div>
   <div class="parallax-bg" id="pBg"></div>
   <div class="parallax-glow" id="pGlow"></div>
@@ -407,7 +333,7 @@ body {
         <linearGradient id="snow-cap" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="rgba(160,170,220,0.55)"/><stop offset="100%" stop-color="rgba(100,110,180,0.2)"/>
         </linearGradient>
-        <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="ground-g" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#060810"/><stop offset="100%" stop-color="#020408"/>
         </linearGradient>
         <radialGradient id="peak-glow" cx="50%" cy="0%" r="30%">
@@ -420,7 +346,7 @@ body {
       <polygon points="0,600 200,560 400,570 560,460 660,330 720,185 780,330 880,460 1040,560 1240,570 1440,560 1440,600" fill="url(#mtn-front)"/>
       <polygon points="685,265 720,183 755,265 742,278 720,270 698,278" fill="url(#snow-cap)"/>
       <polygon points="700,280 720,272 740,280 732,290 720,286 708,290" fill="rgba(120,130,190,0.25)"/>
-      <rect x="0" y="560" width="1440" height="40" fill="url(#ground)"/>
+      <rect x="0" y="560" width="1440" height="40" fill="url(#ground-g)"/>
     </svg>
   </div>
 
@@ -496,7 +422,7 @@ body {
   </div>
 </div>
 
-<!-- TRACKER SECTION -->
+<!-- TRACKERS -->
 <div class="main">
   <div style="height:20px"></div>
   <div class="section-label">Your Trackers</div>
@@ -505,7 +431,7 @@ body {
 <div class="tracker-vertical">
   <a class="tcard tcard-gs" href="gs-planner.html">
     <div class="tcard-glow"></div>
-    <div class="tcard-left"><div class="tcard-icon">📘</div></div>
+    <div class="tcard-icon">📘</div>
     <div class="tcard-body">
       <div class="tcard-badge">Paper 1 • GS & Aptitude</div>
       <div class="tcard-title">General Studies Planner</div>
@@ -517,7 +443,7 @@ body {
 
   <a class="tcard tcard-civil" href="civil-paper2.html">
     <div class="tcard-glow"></div>
-    <div class="tcard-left"><div class="tcard-icon">🏗️</div></div>
+    <div class="tcard-icon">🏗️</div>
     <div class="tcard-body">
       <div class="tcard-badge">Paper 2 • Civil Engineering</div>
       <div class="tcard-title">Civil Engineering Planner</div>
@@ -529,7 +455,7 @@ body {
 
   <a class="tcard tcard-rev" href="revision-chart.html">
     <div class="tcard-glow"></div>
-    <div class="tcard-left"><div class="tcard-icon">📋</div></div>
+    <div class="tcard-icon">📋</div>
     <div class="tcard-body">
       <div class="tcard-badge">Revision Tracker</div>
       <div class="tcard-title">Revision Chart</div>
@@ -544,63 +470,50 @@ body {
 
 <script>
 /* STARS */
-const starsContainer = document.getElementById('pStars');
-for(let i = 0; i < 80; i++){
-  const s = document.createElement('div');
-  s.className = 'star';
-  const size = Math.random() * 2.5 + 0.5;
-  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*60}%;left:${Math.random()*100}%;opacity:${Math.random()*0.6+0.1};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
-  starsContainer.appendChild(s);
+const sc = document.getElementById('pStars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()*2.5+0.5;
+  s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*60}%;left:${Math.random()*100}%;opacity:${Math.random()*0.6+0.1};animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+  sc.appendChild(s);
 }
 
 /* COUNTDOWN */
-const targets = {
-  pre:  new Date('2027-02-01T09:00:00'),
-  main: new Date('2027-06-15T09:00:00')
-};
-function pad(n){ return String(n).padStart(2,'0'); }
-function updateCountdowns(){
-  const now = Date.now();
-  ['pre','main'].forEach(k => {
-    const diff = targets[k] - now;
-    if(diff <= 0) return;
-    document.getElementById(k+'-d').textContent = pad(Math.floor(diff/86400000));
-    document.getElementById(k+'-h').textContent = pad(Math.floor((diff%86400000)/3600000));
-    document.getElementById(k+'-m').textContent = pad(Math.floor((diff%3600000)/60000));
+const targets={pre:new Date('2027-02-01T09:00:00'),main:new Date('2027-06-15T09:00:00')};
+function pad(n){return String(n).padStart(2,'0');}
+function updateCD(){
+  const now=Date.now();
+  ['pre','main'].forEach(k=>{
+    const diff=targets[k]-now;
+    if(diff<=0)return;
+    document.getElementById(k+'-d').textContent=pad(Math.floor(diff/86400000));
+    document.getElementById(k+'-h').textContent=pad(Math.floor((diff%86400000)/3600000));
+    document.getElementById(k+'-m').textContent=pad(Math.floor((diff%3600000)/60000));
   });
 }
-updateCountdowns();
-setInterval(updateCountdowns, 30000);
+updateCD();
+setInterval(updateCD,30000);
 
 /* PARALLAX */
-const pBg       = document.getElementById('pBg');
-const pStars    = document.getElementById('pStars');
-const pMountain = document.getElementById('pMountain');
-const pGlow     = document.getElementById('pGlow');
-const pFigure   = document.getElementById('pFigure');
-const pGround   = document.getElementById('pGround');
-
-function onScroll(){
-  const y = window.scrollY;
-  pStars.style.transform    = `translateY(${y*0.15}px)`;
-  pBg.style.transform       = `translateY(${y*0.25}px)`;
-  pGlow.style.transform     = `translateX(-50%) translateY(${y*0.30}px)`;
-  pMountain.style.transform = `translateY(${y*0.40}px)`;
-  pFigure.style.transform   = `translateX(-50%) translateY(${y*0.55}px)`;
-  pGround.style.transform   = `translateY(${y*0.65}px)`;
-}
-window.addEventListener('scroll', onScroll, { passive: true });
+const pBg=document.getElementById('pBg'),pStars=document.getElementById('pStars'),
+      pMtn=document.getElementById('pMountain'),pGlow=document.getElementById('pGlow'),
+      pFig=document.getElementById('pFigure'),pGnd=document.getElementById('pGround');
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY;
+  pStars.style.transform=`translateY(${y*0.15}px)`;
+  pBg.style.transform=`translateY(${y*0.25}px)`;
+  pGlow.style.transform=`translateX(-50%) translateY(${y*0.30}px)`;
+  pMtn.style.transform=`translateY(${y*0.40}px)`;
+  pFig.style.transform=`translateX(-50%) translateY(${y*0.55}px)`;
+  pGnd.style.transform=`translateY(${y*0.65}px)`;
+},{passive:true});
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBXuhaiC2uIZnIF5KVHIVRljzHyN7O5SEA",
@@ -614,34 +527,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const heroLoginBtn = document.getElementById('heroLoginBtn');
+const btn = document.getElementById('heroLoginBtn');
 let currentUser = null;
 
-heroLoginBtn.addEventListener('click', async () => {
-  if (currentUser) {
-    await signOut(auth);
-    return;
-  }
-  try {
-    await signInWithPopup(auth, provider);
-  } catch(e) {
-    alert(e.message);
-  }
+btn.addEventListener('click', async () => {
+  if (currentUser) { await signOut(auth); return; }
+  try { await signInWithPopup(auth, provider); } catch(e) { alert(e.message); }
 });
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
-    heroLoginBtn.innerHTML = '✅ ' + user.displayName.split(' ')[0] + ' &bull; Logout';
-    heroLoginBtn.style.background = 'rgba(52,211,153,0.15)';
-    heroLoginBtn.style.borderColor = 'rgba(52,211,153,0.4)';
-    heroLoginBtn.style.color = '#34D399';
+    btn.innerHTML = '✅ ' + user.displayName.split(' ')[0] + ' &bull; Logout';
+    btn.style.background = 'rgba(52,211,153,0.15)';
+    btn.style.borderColor = 'rgba(52,211,153,0.4)';
+    btn.style.color = '#34D399';
   } else {
     currentUser = null;
-    heroLoginBtn.innerHTML = '🔐 Login with Google';
-    heroLoginBtn.style.background = 'rgba(255,255,255,0.06)';
-    heroLoginBtn.style.borderColor = 'rgba(255,255,255,0.15)';
-    heroLoginBtn.style.color = '#fff';
+    btn.innerHTML = '🔐 Login with Google';
+    btn.style.background = 'rgba(255,255,255,0.06)';
+    btn.style.borderColor = 'rgba(255,255,255,0.15)';
+    btn.style.color = '#fff';
   }
 });
 </script>
