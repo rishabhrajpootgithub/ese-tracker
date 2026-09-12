@@ -567,15 +567,13 @@ function loadData(){
 }
 
 function saveLocalCache(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
+  // Exam Tracker data is cloud-only. Nothing is saved offline/locally.
 }
 
 async function saveData(showToast=false){
-  saveLocalCache();
-
   if(!currentUser || !cloudReady || !cloudDocRef){
-    setSavedText("Waiting for cloud sync…");
-    if(showToast) toast("Saved locally — login to sync across devices");
+    setSavedText("Login required");
+    if(showToast) toast("Please login to save changes");
     return;
   }
 
@@ -663,7 +661,6 @@ async function startCloudSync(user){
       const data=cloudSnap.data()||{};
       if(Array.isArray(data.exams)){
         exams=data.exams.map(normalizeExam).filter(e=>e.name);
-        saveLocalCache();
         cloudReady=true;
         setSavedText("Cloud synced • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}));
         renderAll();
@@ -690,8 +687,15 @@ function stopCloudSync(){
   cloudDocRef=null;
   cloudReady=false;
   currentUser=null;
+
+  // Hide all Exam Tracker data immediately after logout.
+  exams=[];
+  selectedExamId=null;
+  localStorage.removeItem(STORAGE_KEY);
+  renderAll();
+
   updateCloudButton();
-  setSavedText("Login required for cloud sync");
+  setSavedText("Login required");
 }
 
 function updateDatePreviews(){
@@ -708,9 +712,10 @@ function updateDatePreviews(){
   });
 }
 
-function addExam(){ openModal(); }
+function addExam(){ if(!currentUser) { toast("Please login first"); return; } openModal(); }
 
 function editExam(id){
+  if(!currentUser) { toast("Please login first"); return; }
   const e=exams.find(x=>x.id===id);
   if(!e) return;
   $("modalTitle").textContent="Edit Exam";
@@ -750,6 +755,7 @@ $("confirmClose").addEventListener("click",hideConfirm);
 $("confirmBackdrop").addEventListener("click",e=>{if(e.target===$("confirmBackdrop"))hideConfirm()});
 
 function deleteExam(id){
+  if(!currentUser) { toast("Please login first"); return; }
   const e=exams.find(x=>x.id===id);
   if(!e) return;
   showConfirm(`Are you sure you want to delete "${e.name}"?`,()=>{
@@ -773,6 +779,7 @@ function openModal(){
 function closeModal(){ $("modalBackdrop").classList.remove("show"); }
 
 function saveExam(){
+  if(!currentUser) { toast("Please login first"); return; }
   const form=$("examForm");
   $("examDate").required=!$("examDateNotSpecified").checked;
   if(!form.reportValidity()) return;
@@ -1074,7 +1081,8 @@ document.addEventListener("keydown",e=>{
   else if($("modalBackdrop").classList.contains("show")) closeModal();
 });
 
-loadData();
+// Exam data is loaded only after Firebase authentication succeeds.
+exams=[];
 renderAll();
 
 $("cloudLoginBtn").addEventListener("click",toggleCloudLogin);
