@@ -315,13 +315,14 @@ tr:hover td{background:rgba(255,255,255,0.02)}
    <button class="btn" id="importBtn">↧ <span>Import</span></button>
    <input type="file" id="importFile" accept=".json,application/json" hidden>
    <button class="btn btn-primary" id="addBtn">＋ <span>Add Exam</span></button>
+   <button class="btn" id="cloudLoginBtn">🔐 <span>Login</span></button>
   </div>
  </div>
 </header>
 
 <main class="container">
  <section>
-  <div class="section-title"><h2>Dashboard</h2><span id="lastSaved">Auto-saved locally</span></div>
+  <div class="section-title"><h2>Dashboard</h2><span id="lastSaved">Login required for cloud sync</span></div>
   <div class="stats">
    <div class="stat accent-indigo"><div class="stat-label">Total Exams</div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">All tracked exams</div></div>
    <div class="stat accent-purple"><div class="stat-label">Upcoming Exams</div><div class="stat-value" id="statUpcoming">0</div><div class="stat-sub">Today or later</div></div>
@@ -382,7 +383,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
    <div class="details-empty">Select an exam to view its complete details.</div>
   </div>
  </section>
- <div class="footer">Data is stored only in this browser using localStorage. Export JSON regularly for backup.</div>
+ <div class="footer">Data is synced with your Firebase account across devices. Export JSON regularly for backup.</div>
 </main>
 
 <div class="modal-backdrop" id="modalBackdrop">
@@ -415,14 +416,38 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 "use strict";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBXuhaiC2uIZnIF5KVHIVRljzHyN7O5SEA",
+  authDomain: "tracker-6629e.firebaseapp.com",
+  projectId: "tracker-6629e",
+  storageBucket: "tracker-6629e.firebasestorage.app",
+  messagingSenderId: "811549120359",
+  appId: "1:811549120359:web:9af3d850a5eb9096ca41c2"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const provider = new GoogleAuthProvider();
 
 const STORAGE_KEY = "examTrackerData_v1";
 let exams = [];
 let activeFilter = "all";
 let currentSort = "dateAsc";
 let selectedExamId = null;
+let currentUser = null;
+let cloudDocRef = null;
+let unsubscribeCloud = null;
+let cloudReady = false;
 
 const $ = id => document.getElementById(id);
 
@@ -527,22 +552,142 @@ function loadData(){
       const parsed=JSON.parse(raw);
       const source=Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.exams) ? parsed.exams : []);
       exams=source.map(normalizeExam).filter(e=>e.name);
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
     }else{
       exams=seedData();
-      saveData(false);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
     }
   }catch(err){
-    console.error("Could not load saved data:",err);
+    console.error("Could not load local cache:",err);
     exams=seedData();
-    saveData(false);
   }
 }
 
-function saveData(showToast=false){
+function saveLocalCache(){
   localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
-  $("lastSaved").textContent="Saved locally • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
-  if(showToast) toast("Changes saved ✓");
+}
+
+async function saveData(showToast=false){
+  saveLocalCache();
+
+  if(!currentUser || !cloudReady || !cloudDocRef){
+    setSavedText("Waiting for cloud sync…");
+    if(showToast) toast("Saved locally — login to sync across devices");
+    return;
+  }
+
+  try{
+    await setDoc(cloudDocRef,{
+      exams: exams.map(normalizeExam),
+      updatedAt: serverTimestamp(),
+      updatedBy: currentUser.uid
+    });
+    setSavedText("Cloud synced • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}));
+    if(showToast) toast("Saved & synced ✓");
+  }catch(err){
+    console.error("Could not save to Firestore:",err);
+    setSavedText("Cloud sync error");
+    toast("Cloud save failed — check your connection");
+  }
+}
+
+function setSavedText(text){
+  $("lastSaved").textContent=text;
+}
+
+function updateCloudButton(){
+  const btn=$("cloudLoginBtn");
+  if(!btn) return;
+
+  if(currentUser){
+    const firstName=(currentUser.displayName||currentUser.email||"Account").split(" ")[0];
+    btn.innerHTML=`☁️ <span>${esc(firstName)} • Logout</span>`;
+    btn.style.background="rgba(52,211,153,0.15)";
+    btn.style.borderColor="rgba(52,211,153,0.4)";
+    btn.style.color="#34D399";
+  }else{
+    btn.innerHTML="🔐 <span>Login</span>";
+    btn.style.background="";
+    btn.style.borderColor="";
+    btn.style.color="";
+  }
+}
+
+async function toggleCloudLogin(){
+  if(currentUser){
+    await signOut(auth);
+    return;
+  }
+
+  try{
+    await signInWithPopup(auth,provider);
+  }catch(err){
+    console.error("Google login failed:",err);
+    if(err.code==="auth/popup-closed-by-user"){
+      toast("Login cancelled");
+    }else{
+      toast("Login failed — "+(err.message||"please try again"));
+    }
+  }
+}
+
+async function startCloudSync(user){
+  currentUser=user;
+  updateCloudButton();
+  cloudReady=false;
+  setSavedText("Connecting to cloud…");
+
+  if(unsubscribeCloud) unsubscribeCloud();
+
+  cloudDocRef=doc(db,"users",user.uid,"examTracker","data");
+
+  try{
+    const snap=await getDoc(cloudDocRef);
+
+    if(!snap.exists()){
+      // The first device that logs in initializes the shared cloud data
+      // from its current local Exam Tracker data.
+      await setDoc(cloudDocRef,{
+        exams: exams.map(normalizeExam),
+        updatedAt: serverTimestamp(),
+        updatedBy: user.uid
+      });
+    }
+
+    unsubscribeCloud=onSnapshot(cloudDocRef,(cloudSnap)=>{
+      if(!cloudSnap.exists()) return;
+
+      const data=cloudSnap.data()||{};
+      if(Array.isArray(data.exams)){
+        exams=data.exams.map(normalizeExam).filter(e=>e.name);
+        saveLocalCache();
+        cloudReady=true;
+        setSavedText("Cloud synced • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}));
+        renderAll();
+      }
+    },(err)=>{
+      console.error("Firestore listener error:",err);
+      cloudReady=false;
+      setSavedText("Cloud sync error");
+      toast("Could not sync cloud data");
+    });
+  }catch(err){
+    console.error("Could not initialize cloud data:",err);
+    cloudReady=false;
+    setSavedText("Cloud connection failed");
+    toast("Cloud connection failed — check Firebase/rules");
+  }
+}
+
+function stopCloudSync(){
+  if(unsubscribeCloud){
+    unsubscribeCloud();
+    unsubscribeCloud=null;
+  }
+  cloudDocRef=null;
+  cloudReady=false;
+  currentUser=null;
+  updateCloudButton();
+  setSavedText("Login required for cloud sync");
 }
 
 function updateDatePreviews(){
@@ -891,8 +1036,23 @@ document.addEventListener("keydown",e=>{
   else if($("modalBackdrop").classList.contains("show")) closeModal();
 });
 
-loadData();renderAll();
-setInterval(()=>{ renderUpcomingExams();updateStatistics();renderTable();updateCountdowns();if(selectedExamId) renderExamDetails(selectedExamId); },60000);
+loadData();
+renderAll();
+
+$("cloudLoginBtn").addEventListener("click",toggleCloudLogin);
+
+onAuthStateChanged(auth,(user)=>{
+  if(user) startCloudSync(user);
+  else stopCloudSync();
+});
+
+setInterval(()=>{
+  renderUpcomingExams();
+  updateStatistics();
+  renderTable();
+  updateCountdowns();
+  if(selectedExamId) renderExamDetails(selectedExamId);
+},60000);
 </script>
 </body>
 </html>
