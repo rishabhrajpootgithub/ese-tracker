@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090E">
+<title>Exam Date Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E;--card:rgba(255,255,255,0.025);--card2:rgba(255,255,255,0.04);
+  --text:#fff;--muted:#6B7280;--line:rgba(255,255,255,0.07);
+  --primary:#6366F1;--primary-dark:#4f46e5;--purple:#A78BFA;--pink:#F472B6;
+  --teal:#2DD4BF;--green:#34D399;--green-bg:rgba(52,211,153,0.15);
+  --amber:#FBBF24;--amber-bg:rgba(251,191,36,0.15);
+  --red:#FB7185;--red-bg:rgba(251,113,133,0.15);
+  --blue-bg:rgba(99,102,241,0.15);
+  --indigo:#818CF8;--indigo-bg:rgba(129,140,248,0.15);
+  --shadow:0 8px 32px rgba(0,0,0,0.4);--radius:14px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+::placeholder{color:var(--muted)}
+
+/* HEADER */
+.header{
+  background:linear-gradient(160deg,#0f0c29,#1a1a2e,#16213e);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(12px);
+}
+.header-inner{max-width:1400px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--purple));
+  color:#fff;display:grid;place-items:center;font-weight:900;font-size:18px;
+}
+.brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:-0.3px}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:0.5px}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{
+  border:1px solid var(--line);background:var(--card2);color:var(--text);
+  border-radius:10px;padding:9px 14px;font-weight:700;font-size:13px;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  transition:background 0.2s,transform 0.15s;
+}
+.btn:hover{background:rgba(255,255,255,0.08);transform:translateY(-1px)}
+.btn:active{transform:scale(0.97)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--primary),var(--purple));
+  border-color:transparent;color:#fff;
+}
+.btn-primary:hover{filter:brightness(1.1);background:linear-gradient(135deg,var(--primary),var(--purple))}
+.btn-danger{color:var(--red);border-color:rgba(251,113,133,0.2)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-small{padding:6px 10px;font-size:12px}
+
+/* CONTAINER */
+.container{max-width:1400px;margin:auto;padding:22px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 13px}
+.section-title h2{margin:0;font-size:18px;font-weight:800;letter-spacing:-0.3px}
+.section-title span{color:var(--muted);font-size:12px;font-weight:600}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+.stat{
+  background:var(--card);border:1px solid var(--line);
+  border-left:3px solid transparent;
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;
+  transition:transform 0.2s;
+}
+.stat:hover{transform:translateY(-2px)}
+.stat-label{color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px}
+.stat-value{font-size:26px;font-weight:900;margin-top:7px;letter-spacing:-0.5px}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:3px;font-weight:500}
+.stat.accent-indigo{border-left-color:var(--indigo)}.stat.accent-indigo .stat-value{color:var(--indigo)}
+.stat.accent-purple{border-left-color:var(--purple)}.stat.accent-purple .stat-value{color:var(--purple)}
+.stat.accent-amber{border-left-color:var(--amber)}.stat.accent-amber .stat-value{color:var(--amber)}
+.stat.accent-green{border-left-color:var(--green)}.stat.accent-green .stat-value{color:var(--green)}
+.stat.accent-pink{border-left-color:var(--pink)}.stat.accent-pink .stat-value{color:var(--pink)}
+
+/* BADGES */
+.badge{
+  display:inline-flex;align-items:center;border-radius:99px;
+  padding:4px 10px;font-size:10px;font-weight:800;white-space:nowrap;letter-spacing:0.5px;
+}
+.badge-upcoming{background:var(--indigo-bg);color:var(--indigo)}
+.badge-today{background:var(--amber-bg);color:var(--amber)}
+.badge-completed{background:var(--red-bg);color:var(--red)}
+.badge-applied{background:var(--green-bg);color:var(--green)}
+
+.days-counter{
+  display:inline-flex;align-items:center;
+  padding:4px 10px;border-radius:99px;
+  font-weight:800;font-size:11px;
+  background:var(--indigo-bg);color:var(--indigo);
+}
+.days-counter.today{background:var(--amber-bg);color:var(--amber)}
+
+/* CALENDAR ICON */
+.cal-icon{
+  display:inline-flex;flex-direction:column;width:42px;
+  border-radius:8px;overflow:hidden;border:1px solid var(--line);
+  vertical-align:middle;
+}
+.cal-icon .cal-month{background:var(--red);color:#fff;font-size:8px;font-weight:800;text-align:center;text-transform:uppercase;letter-spacing:1px;padding:2px 0}
+.cal-icon .cal-day{background:var(--card2);font-size:15px;font-weight:900;text-align:center;padding:4px 0;color:var(--text)}
+
+/* TOOLBAR */
+.toolbar{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:12px;margin-bottom:12px;
+  display:flex;gap:9px;align-items:center;flex-wrap:wrap;
+}
+.search{flex:1;min-width:210px;position:relative}
+.search input{
+  width:100%;padding:10px 12px;
+  border:1px solid var(--line);border-radius:10px;
+  outline:none;background:rgba(255,255,255,0.04);color:var(--text);
+  font-weight:500;
+}
+.search input:focus,input:focus,textarea:focus,select:focus{
+  border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,0.2);
+}
+.filters{display:flex;gap:5px;flex-wrap:wrap}
+.filter{
+  border:1px solid var(--line);background:transparent;color:var(--muted);
+  border-radius:99px;padding:7px 14px;font-size:11px;font-weight:700;
+  letter-spacing:0.3px;transition:all 0.2s;
+}
+.filter:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
+.filter.active{background:var(--primary);color:#fff;border-color:transparent}
+.sort{
+  padding:9px 10px;border:1px solid var(--line);border-radius:10px;
+  background:rgba(255,255,255,0.04);color:var(--text);font-size:12px;font-weight:600;
+  outline:none;
+}
+
+/* TABLE */
+.table-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+}
+.table-scroll{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:1050px}
+.upcoming-table{min-width:0}
+th{
+  background:rgba(255,255,255,0.03);text-align:left;
+  font-size:10px;color:var(--muted);text-transform:uppercase;
+  letter-spacing:1.5px;padding:11px;border-bottom:1px solid var(--line);
+  white-space:nowrap;font-weight:800;
+}
+td{padding:11px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:13px}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.exam-cell{font-weight:700}
+.muted{color:var(--muted);font-size:12px}
+.clickable-row{cursor:pointer}
+
+/* TOGGLE */
+.status-toggle{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.status-toggle input{display:none}
+.toggle{width:36px;height:20px;background:rgba(255,255,255,0.1);border-radius:20px;position:relative;transition:.2s}
+.toggle:after{content:"";width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;left:2px;top:2px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+.status-toggle input:checked+.toggle{background:var(--green)}
+.status-toggle input:checked+.toggle:after{left:18px}
+
+/* EMPTY */
+.empty{padding:42px 20px;text-align:center;color:var(--muted)}
+.empty-icon{font-size:35px;margin-bottom:8px}
+.empty h3{color:var(--text);margin:0 0 6px;font-weight:800}
+.empty p{margin:0 0 15px;font-size:13px}
+
+/* MODAL */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(2,6,20,0.75);
+  backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:16px;z-index:50;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:min(650px,100%);max-height:92vh;overflow:auto;
+  background:#0f1220;border:1px solid var(--line);
+  border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.modal-head{
+  padding:18px 20px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(99,102,241,0.05);
+}
+.modal-head h3{margin:0;font-size:17px;font-weight:800}
+.close{
+  border:1px solid var(--line);background:var(--card2);
+  color:var(--text);border-radius:9px;
+  width:34px;height:34px;font-size:20px;
+  transition:background 0.2s;
+}
+.close:hover{background:rgba(255,255,255,0.1)}
+.form{padding:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field.full{grid-column:1/-1}
+.field label{display:block;font-size:10px;font-weight:800;color:var(--muted);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:10px;
+  padding:10px 11px;outline:none;
+  background:rgba(255,255,255,0.04);color:var(--text);font-weight:500;
+}
+.field textarea{resize:vertical;min-height:72px}
+.check-box{
+  border:1px solid var(--line);border-radius:10px;
+  padding:10px 11px;display:flex;align-items:center;gap:9px;min-height:42px;
+  background:rgba(255,255,255,0.02);
+}
+.check-box input{width:17px;height:17px;accent-color:var(--green)}
+.modal-actions{
+  padding:14px 20px;border-top:1px solid var(--line);
+  display:flex;justify-content:flex-end;gap:8px;
+  background:rgba(255,255,255,0.01);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;right:18px;bottom:18px;
+  background:#0f1220;color:var(--text);
+  border:1px solid rgba(99,102,241,0.35);
+  padding:11px 16px;border-radius:10px;
+  font-size:12px;font-weight:600;
+  box-shadow:var(--shadow);
+  opacity:0;transform:translateY(10px);
+  transition:.25s;z-index:100;
+}
+.toast.show{opacity:1;transform:none}
+
+.mode{
+  font-size:11px;padding:3px 8px;border-radius:7px;
+  background:var(--indigo-bg);color:var(--indigo);font-weight:700;
+}
+.notes-cell{max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:5px}
+
+/* DETAILS */
+.details-section{margin-bottom:30px}
+.details-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;
+}
+.details-empty{text-align:center;color:var(--muted);padding:28px 12px;font-size:13px}
+.details-head{
+  display:flex;justify-content:space-between;gap:15px;
+  align-items:flex-start;padding-bottom:15px;border-bottom:1px solid var(--line);
+}
+.details-title{font-size:20px;font-weight:900;letter-spacing:-0.3px}
+.details-org{font-size:12px;color:var(--muted);margin-top:4px;font-weight:600}
+.details-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}
+.detail-item{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:12px}
+.detail-label{font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:1.5px}
+.detail-value{font-size:14px;font-weight:700;margin-top:5px;word-break:break-word}
+.detail-notes{margin-top:12px;padding:12px;background:var(--card2);border:1px solid var(--line);border-radius:11px}
+.detail-notes .detail-value{font-weight:500;line-height:1.6;white-space:pre-wrap}
+
+.clickable-exam{cursor:pointer;color:var(--indigo)}
+.clickable-exam:hover{color:var(--purple);text-decoration:underline}
+
+.footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0 10px;font-weight:500}
+.date-preview{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600}
+
+/* MOBILE */
+.mobile-exam-list{display:none}
+.mobile-exam-item{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:14px;margin-bottom:10px;
+  transition:border-color 0.2s;
+}
+.mobile-exam-item:hover{border-color:rgba(129,140,248,0.3)}
+.mobile-exam-item:last-child{margin-bottom:0}
+.mobile-exam-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mobile-exam-name{font-weight:800;font-size:15px}
+.mobile-exam-org{font-size:12px;color:var(--muted);margin-top:2px}
+.mobile-exam-info{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.mobile-exam-label{display:block;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.mobile-exam-value{display:block;font-size:13px;font-weight:700;margin-top:2px}
+.mobile-exam-actions{display:flex;gap:7px;border-top:1px solid var(--line);padding-top:11px}
+.mobile-exam-actions .btn{flex:1}
+
+@media(max-width:1050px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){
+ .details-grid{grid-template-columns:1fr 1fr}.details-card{padding:14px}.details-head{align-items:flex-start}
+ .table-scroll:not(.upcoming-scroll){display:none}.mobile-exam-list{display:block;padding:10px}
+ .header-inner{padding:11px 14px}.header-actions .btn span{display:none}.header-actions{gap:5px}.header-actions .btn{padding:9px 10px}
+ .container{padding:15px 12px}.stats{grid-template-columns:repeat(2,1fr);gap:9px}.stat{padding:13px}.stat-value{font-size:22px}.stat:last-child{grid-column:1/-1}
+ .toolbar{padding:10px}.search{min-width:100%}.filters{width:100%;overflow:auto;flex-wrap:nowrap;padding-bottom:2px}.filter{white-space:nowrap}
+ .sort{width:100%}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+ .modal{border-radius:15px}.form{padding:16px}.modal-head{padding:15px 16px}.modal-actions{padding:12px 16px}.modal-actions .btn{flex:1}
+}
+@media(max-width:380px){.stats{grid-template-columns:1fr}.stat:last-child{grid-column:auto}.details-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header">
+ <div class="header-inner">
+  <div class="brand">
+    <div class="brand-icon">✓</div>
+    <div><h1>Exam Date Tracker</h1><p>COMPETITIVE EXAM DASHBOARD</p></div>
+  </div>
+  <div class="header-actions">
+   <button class="btn" id="exportBtn">↥ <span>Export</span></button>
+   <button class="btn" id="importBtn">↧ <span>Import</span></button>
+   <input type="file" id="importFile" accept=".json,application/json" hidden>
+   <button class="btn btn-primary" id="addBtn">＋ <span>Add Exam</span></button>
+  </div>
+ </div>
+</header>
+
+<main class="container">
+ <section>
+  <div class="section-title"><h2>Dashboard</h2><span id="lastSaved">Auto-saved locally</span></div>
+  <div class="stats">
+   <div class="stat accent-indigo"><div class="stat-label">Total Exams</div><div class="stat-value" id="statTotal">0</div><div class="stat-sub">All tracked exams</div></div>
+   <div class="stat accent-purple"><div class="stat-label">Upcoming Exams</div><div class="stat-value" id="statUpcoming">0</div><div class="stat-sub">Today or later</div></div>
+   <div class="stat accent-amber"><div class="stat-label">Applications Pending</div><div class="stat-value" id="statPending">0</div><div class="stat-sub">Not yet applied</div></div>
+   <div class="stat accent-green"><div class="stat-label">Applications Completed</div><div class="stat-value" id="statApplied">0</div><div class="stat-sub">Marked applied</div></div>
+   <div class="stat accent-pink"><div class="stat-label">Exams This Month</div><div class="stat-value" id="statMonth">0</div><div class="stat-sub" id="monthLabel">Current month</div></div>
+  </div>
+ </section>
+
+ <section class="upcoming-wrap">
+  <div class="section-title"><h2>Upcoming Exams</h2><span>Automatically sorted by exam date</span></div>
+  <div class="table-card">
+   <div class="table-scroll upcoming-scroll">
+    <table class="upcoming-table">
+     <thead><tr><th>Exam</th><th>Exam Date</th><th>Days Left</th></tr></thead>
+     <tbody id="upcoming"></tbody>
+    </table>
+   </div>
+   <div class="empty" id="upcomingEmpty" style="display:none"><div class="empty-icon">📅</div><h3>No Upcoming Exams</h3><p>Add an exam to start tracking your schedule.</p><button class="btn btn-primary" onclick="addExam()">＋ Add Your First Exam</button></div>
+  </div>
+ </section>
+
+ <section>
+  <div class="section-title"><h2>All Exams</h2><span id="resultCount"></span></div>
+  <div class="toolbar">
+   <div class="search"><input id="search" type="search" placeholder="🔍  Search exams..." autocomplete="off"></div>
+   <div class="filters" id="filters">
+    <button class="filter active" data-filter="all">All</button>
+    <button class="filter" data-filter="applied">Applied</button>
+    <button class="filter" data-filter="pending">Not Applied</button>
+    <button class="filter" data-filter="upcoming">Upcoming</button>
+    <button class="filter" data-filter="completed">Completed</button>
+   </div>
+   <select class="sort" id="sort">
+    <option value="dateAsc">Exam Date ↑</option>
+    <option value="dateDesc">Exam Date ↓</option>
+    <option value="deadlineAsc">Application Deadline ↑</option>
+    <option value="deadlineDesc">Application Deadline ↓</option>
+    <option value="nameAsc">Exam Name A–Z</option>
+    <option value="nameDesc">Exam Name Z–A</option>
+   </select>
+  </div>
+  <div class="table-card">
+   <div class="table-scroll">
+    <table>
+     <thead><tr><th>Exam</th><th>Organization</th><th>Application Start</th><th>Application Deadline</th><th>Exam Date</th><th>Applied</th><th>Mode</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+     <tbody id="examTable"></tbody>
+    </table>
+   </div>
+   <div class="mobile-exam-list" id="mobileExamList"></div>
+   <div class="empty" id="tableEmpty" style="display:none"><div class="empty-icon">📋</div><h3>No exams found</h3><p>Try changing your search or filter.</p></div>
+  </div>
+ </section>
+
+ <section class="details-section" id="detailsSection">
+  <div class="section-title"><h2>Exam Details</h2><span id="detailsHint">Select an exam from the table or cards</span></div>
+  <div class="details-card" id="examDetails">
+   <div class="details-empty">Select an exam to view its complete details.</div>
+  </div>
+ </section>
+ <div class="footer">Data is stored only in this browser using localStorage. Export JSON regularly for backup.</div>
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop">
+ <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-head"><h3 id="modalTitle">Add Exam</h3><button class="close" id="closeModal" aria-label="Close">×</button></div>
+  <form class="form" id="examForm">
+   <input type="hidden" id="editId">
+   <div class="grid">
+    <div class="field"><label for="examName">Exam Name *</label><input id="examName" required placeholder="e.g. UPSC CSE"></div>
+    <div class="field"><label for="organization">Organization / Conducting Body</label><input id="organization" placeholder="e.g. UPSC"></div>
+    <div class="field"><label for="appStart">Application Start Date</label><input id="appStart" type="date" lang="en-IN"><div class="date-preview" id="appStartPreview"></div></div>
+    <div class="field"><label for="appLast">Application Last Date</label><input id="appLast" type="date" lang="en-IN"><div class="date-preview" id="appLastPreview"></div></div>
+    <div class="field"><label for="examDate">Exam Date *</label><input id="examDate" type="date" required><div class="date-preview" id="examDatePreview"></div></div>
+    <div class="field"><label for="mode">Exam Mode</label><select id="mode"><option value="">Not specified</option><option>Online</option><option>Offline</option><option>CBT</option><option>Written</option><option>Interview</option><option>CBT / Written</option><option>Other</option></select></div>
+    <div class="field full"><label>Applied Status</label><label class="check-box"><input id="applied" type="checkbox"><span>✓ I have applied for this exam</span></label></div>
+    <div class="field full"><label for="notes">Notes</label><textarea id="notes" placeholder="Additional information..."></textarea></div>
+   </div>
+  </form>
+  <div class="modal-actions"><button class="btn" id="cancelModal">Cancel</button><button class="btn btn-primary" id="saveExamBtn">Save Exam</button></div>
+ </div>
+</div>
+
+<div class="modal-backdrop" id="confirmBackdrop">
+ <div class="modal" style="width:min(400px,100%)" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-head"><h3 id="confirmTitle">Please confirm</h3><button class="close" id="confirmClose" aria-label="Close">×</button></div>
+  <div class="form" id="confirmMessage" style="padding-top:4px"></div>
+  <div class="modal-actions"><button class="btn" id="confirmCancel">Cancel</button><button class="btn btn-primary" id="confirmOk">Confirm</button></div>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "examTrackerData_v1";
+let exams = [];
+let activeFilter = "all";
+let currentSort = "dateAsc";
+let selectedExamId = null;
+
+const $ = id => document.getElementById(id);
+
+function uid(){
+  return "exam_" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+
+function localDateString(d = new Date()){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function normalizeDateValue(value){
+  if(value === null || value === undefined || value === "") return "";
+  if(value instanceof Date && !Number.isNaN(value.getTime())) return localDateString(value);
+  const s=String(value).trim();
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return validCalendarDate(+m[1],+m[2],+m[3]) ? `${m[1]}-${m[2]}-${m[3]}` : "";
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})T/);
+  if(m) return validCalendarDate(+m[1],+m[2],+m[3]) ? `${m[1]}-${m[2]}-${m[3]}` : "";
+  m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+  if(m){
+    let a=+m[1], b=+m[2], y=+m[3], day, month;
+    if(a > 12 && b <= 12){ day=a; month=b; }
+    else if(b > 12 && a <= 12){ month=a; day=b; }
+    else { day=a; month=b; }
+    return validCalendarDate(y,month,day) ? `${y}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}` : "";
+  }
+  if(/^\d{10,13}$/.test(s)){
+    const d=new Date(Number(s));
+    return Number.isNaN(d.getTime()) ? "" : localDateString(d);
+  }
+  return "";
+}
+
+function validCalendarDate(year,month,day){
+  if(!Number.isInteger(year)||!Number.isInteger(month)||!Number.isInteger(day)) return false;
+  if(month<1||month>12||day<1||day>31) return false;
+  const d=new Date(year,month-1,day);
+  return d.getFullYear()===year && d.getMonth()===month-1 && d.getDate()===day;
+}
+
+function parseDate(value){
+  const canonical=normalizeDateValue(value);
+  if(!canonical) return null;
+  const [y,m,d]=canonical.split("-").map(Number);
+  const date=new Date(y,m-1,d);
+  date.setHours(0,0,0,0);
+  return validCalendarDate(y,m,d) ? date : null;
+}
+
+function formatDate(value){
+  const canonical=normalizeDateValue(value);
+  const d=parseDate(canonical);
+  if(!d) return "—";
+  return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`;
+}
+
+const MONTH_ABBR=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function calendarIcon(value){
+  const d=parseDate(value);
+  if(!d) return `<span class="cal-icon"><span class="cal-month">—</span><span class="cal-day">—</span></span>`;
+  return `<span class="cal-icon"><span class="cal-month">${MONTH_ABBR[d.getMonth()]}</span><span class="cal-day">${String(d.getDate()).padStart(2,"0")}</span></span>`;
+}
+
+function dayDiff(value){
+  const target=parseDate(value);
+  const today=parseDate(localDateString());
+  if(!target || !today) return null;
+  const targetUTC=Date.UTC(target.getFullYear(),target.getMonth(),target.getDate());
+  const todayUTC=Date.UTC(today.getFullYear(),today.getMonth(),today.getDate());
+  return Math.round((targetUTC-todayUTC)/86400000);
+}
+
+function seedData(){
+  return [
+    {id:uid(),name:"UPSC CSE",org:"UPSC",appStart:"2026-02-18",appLast:"2026-03-10",examDate:"2026-10-04",applied:false,mode:"Written",notes:"Sample data — edit or delete."},
+    {id:uid(),name:"SSC CGL",org:"SSC",appStart:"2026-06-15",appLast:"2026-07-10",examDate:"2026-09-18",applied:true,mode:"CBT",notes:"Sample data — edit or delete."},
+    {id:uid(),name:"RRB JE",org:"Railway Recruitment Board",appStart:"2026-08-01",appLast:"2026-08-30",examDate:"2026-09-25",applied:false,mode:"CBT",notes:"Sample data — edit or delete."},
+    {id:uid(),name:"GATE",org:"IITs",appStart:"2026-08-28",appLast:"2026-10-10",examDate:"2027-02-07",applied:false,mode:"Online",notes:"Sample data — edit or delete."}
+  ];
+}
+
+function normalizeExam(e){
+  return {
+    id:String(e.id || uid()),
+    name:String(e.name || e.examName || "").trim(),
+    org:String(e.org || e.organization || "").trim(),
+    appStart:normalizeDateValue(e.appStart ?? e.applicationStartDate ?? e.applicationStart ?? ""),
+    appLast:normalizeDateValue(e.appLast ?? e.applicationLastDate ?? e.applicationEndDate ?? ""),
+    examDate:normalizeDateValue(e.examDate ?? e.examDateValue ?? ""),
+    applied:e.applied === true || e.applied === 1 || e.applied === "true" || e.applied === "1",
+    mode:String(e.mode || "").trim(),
+    notes:String(e.notes || "").trim()
+  };
+}
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      const source=Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.exams) ? parsed.exams : []);
+      exams=source.map(normalizeExam).filter(e=>e.name);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
+    }else{
+      exams=seedData();
+      saveData(false);
+    }
+  }catch(err){
+    console.error("Could not load saved data:",err);
+    exams=seedData();
+    saveData(false);
+  }
+}
+
+function saveData(showToast=false){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
+  $("lastSaved").textContent="Saved locally • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
+  if(showToast) toast("Changes saved ✓");
+}
+
+function updateDatePreviews(){
+  const fields=[["appStart","appStartPreview"],["appLast","appLastPreview"],["examDate","examDatePreview"]];
+  fields.forEach(([inputId,previewId])=>{
+    const value=$(inputId).value;
+    $(previewId).textContent=value ? `Selected: ${formatDate(value)}` : "";
+  });
+}
+
+function addExam(){ openModal(); }
+
+function editExam(id){
+  const e=exams.find(x=>x.id===id);
+  if(!e) return;
+  $("modalTitle").textContent="Edit Exam";
+  $("editId").value=e.id;$("examName").value=e.name;$("organization").value=e.org;
+  $("appStart").value=normalizeDateValue(e.appStart);
+  $("appLast").value=normalizeDateValue(e.appLast);
+  $("examDate").value=normalizeDateValue(e.examDate);
+  updateDatePreviews();
+  $("applied").checked=e.applied;$("mode").value=e.mode;$("notes").value=e.notes;
+  $("modalBackdrop").classList.add("show");
+  setTimeout(()=>$("examName").focus(),50);
+}
+
+let confirmAction=null;
+function showConfirm(message, onConfirm, okLabel="Confirm"){
+  $("confirmMessage").textContent=message;
+  $("confirmOk").textContent=okLabel;
+  confirmAction=onConfirm;
+  $("confirmBackdrop").classList.add("show");
+}
+function hideConfirm(){
+  $("confirmBackdrop").classList.remove("show");
+  confirmAction=null;
+}
+$("confirmOk").addEventListener("click",()=>{ const action=confirmAction; hideConfirm(); if(action) action(); });
+$("confirmCancel").addEventListener("click",hideConfirm);
+$("confirmClose").addEventListener("click",hideConfirm);
+$("confirmBackdrop").addEventListener("click",e=>{if(e.target===$("confirmBackdrop"))hideConfirm()});
+
+function deleteExam(id){
+  const e=exams.find(x=>x.id===id);
+  if(!e) return;
+  showConfirm(`Are you sure you want to delete "${e.name}"?`,()=>{
+    exams=exams.filter(x=>x.id!==id);
+    saveData(true); renderAll();
+  },"Delete");
+}
+
+function openModal(){
+  $("modalTitle").textContent="Add Exam";
+  $("examForm").reset();$("editId").value="";
+  updateDatePreviews();
+  $("modalBackdrop").classList.add("show");
+  setTimeout(()=>$("examName").focus(),50);
+}
+
+function closeModal(){ $("modalBackdrop").classList.remove("show"); }
+
+function saveExam(){
+  const form=$("examForm");
+  if(!form.reportValidity()) return;
+  const data={
+    name:$("examName").value.trim(),org:$("organization").value.trim(),
+    appStart:normalizeDateValue($("appStart").value),
+    appLast:normalizeDateValue($("appLast").value),
+    examDate:normalizeDateValue($("examDate").value),
+    applied:$("applied").checked,mode:$("mode").value,notes:$("notes").value.trim()
+  };
+  const editId=$("editId").value;
+  let savedId;
+  if(editId){
+    const idx=exams.findIndex(e=>e.id===editId);
+    if(idx>=0) exams[idx]={...exams[idx],...data};
+    savedId=editId;
+  }else{
+    savedId=uid();
+    exams.push({id:savedId,...data});
+  }
+  saveData(true);closeModal();renderAll();selectExam(savedId);
+}
+
+function matchesFilter(e){
+  const status=examStatus(e);
+  if(activeFilter==="applied") return e.applied;
+  if(activeFilter==="pending") return !e.applied;
+  if(activeFilter==="upcoming"){ const diff=dayDiff(e.examDate); return diff !== null && diff >= 0; }
+  if(activeFilter==="completed") return status==="Completed";
+  return true;
+}
+
+function filterExams(){ renderTable(); }
+
+function sortExams(list){
+  const arr=[...list];
+  const str=(v)=>String(v||"").toLowerCase();
+  const dateValue=(v)=>{ const d=parseDate(v); return d ? d.getTime() : Number.MAX_SAFE_INTEGER; };
+  return arr.sort((a,b)=>{
+    if(currentSort==="nameAsc") return str(a.name).localeCompare(str(b.name));
+    if(currentSort==="nameDesc") return str(b.name).localeCompare(str(a.name));
+    if(currentSort==="dateDesc") return dateValue(b.examDate)-dateValue(a.examDate);
+    if(currentSort==="deadlineAsc") return dateValue(a.appLast)-dateValue(b.appLast);
+    if(currentSort==="deadlineDesc") return dateValue(b.appLast)-dateValue(a.appLast);
+    return dateValue(a.examDate)-dateValue(b.examDate);
+  });
+}
+
+function statusBadge(status){
+  const cls=status==="Today"?"badge-today":status==="Completed"?"badge-completed":"badge-upcoming";
+  return `<span class="badge ${cls}">${status.toUpperCase()}</span>`;
+}
+
+function renderTable(){
+  const q=$("search").value.trim().toLowerCase();
+  let list=exams.filter(matchesFilter).filter(e=>(e.name+" "+e.org).toLowerCase().includes(q));
+  list=sortExams(list);
+  $("resultCount").textContent=`${list.length} of ${exams.length} exam${exams.length===1?"":"s"}`;
+  const tbody=$("examTable");
+  const mobile=$("mobileExamList");
+  tbody.innerHTML="";mobile.innerHTML="";
+  $("tableEmpty").style.display=list.length?"none":"block";
+  mobile.style.display=list.length?"block":"none";
+
+  list.forEach(e=>{
+    const status=examStatus(e), diff=dayDiff(e.examDate);
+    const daysText=diff===null?"—":diff<0?"Completed":diff===0?"TODAY":`${diff} day${diff===1?"":"s"}`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><div class="exam-cell clickable-exam" data-details="${e.id}" title="View exam details">${esc(e.name)}</div></td>
+      <td>${esc(e.org)||'<span class="muted">—</span>'}</td>
+      <td>${formatDate(e.appStart)}</td>
+      <td>${formatDate(e.appLast)}</td>
+      <td><strong>${formatDate(e.examDate)}</strong></td>
+      <td>
+        <label class="status-toggle" title="${e.applied?"Applied":"Not applied"}">
+          <input type="checkbox" ${e.applied?"checked":""} data-id="${e.id}">
+          <span class="toggle"></span><span class="muted">${e.applied?"Applied":"Pending"}</span>
+        </label>
+      </td>
+      <td>${e.mode?`<span class="mode">${esc(e.mode)}</span>`:'<span class="muted">—</span>'}</td>
+      <td>${statusBadge(status)}</td>
+      <td class="notes-cell" title="${esc(e.notes)}">${esc(e.notes)||'<span class="muted">—</span>'}</td>
+      <td><div class="actions"><button class="btn btn-small" data-edit="${e.id}" title="Edit">✏️</button><button class="btn btn-small btn-danger" data-delete="${e.id}" title="Delete">🗑️</button></div></td>`;
+    tbody.appendChild(tr);
+
+    const item=document.createElement("article");
+    item.className="mobile-exam-item";
+    item.innerHTML=`
+      <div class="mobile-exam-row">
+        <div>
+          <div class="mobile-exam-name clickable-exam" data-details="${e.id}">${esc(e.name)}</div>
+          <div class="mobile-exam-org">${esc(e.org)||"Organization not specified"}</div>
+        </div>
+        ${statusBadge(status)}
+      </div>
+      <div class="mobile-exam-info">
+        <div><span class="mobile-exam-label">Exam Date</span><span class="mobile-exam-value">${formatDate(e.examDate)}</span></div>
+        <div><span class="mobile-exam-label">Days Left</span><span class="mobile-exam-value"><span class="days-counter ${diff===0?"today":""}" data-countdown="${e.id}">${daysText}</span></span></div>
+      </div>
+      <div class="mobile-exam-actions">
+        <button class="btn btn-small" data-details="${e.id}">View Full Details</button>
+        <button class="btn btn-small" data-edit="${e.id}">✏️ Edit</button>
+        <button class="btn btn-small btn-danger" data-delete="${e.id}">🗑️</button>
+      </div>`;
+    mobile.appendChild(item);
+  });
+}
+
+function renderExamDetails(id){
+  const box=$("examDetails");
+  const hint=$("detailsHint");
+  const e=exams.find(x=>x.id===id);
+  if(!e){
+    box.innerHTML='<div class="details-empty">Select an exam to view its complete details.</div>';
+    hint.textContent="Select an exam from the table or cards";
+    return;
+  }
+  const status=examStatus(e);
+  const dl=deadlineInfo(e);
+  hint.textContent="Showing selected exam";
+  box.innerHTML=`
+    <div class="details-head">
+      <div>
+        <div class="details-title">${esc(e.name)}</div>
+        <div class="details-org">${esc(e.org)||"Organization not specified"}</div>
+      </div>
+      <div>${statusBadge(status)}</div>
+    </div>
+    <div class="details-grid">
+      <div class="detail-item"><div class="detail-label">Application Start Date</div><div class="detail-value">${formatDate(e.appStart)}</div></div>
+      <div class="detail-item"><div class="detail-label">Application Last Date</div><div class="detail-value">${formatDate(e.appLast)}</div></div>
+      <div class="detail-item"><div class="detail-label">Exam Date</div><div class="detail-value">${formatDate(e.examDate)}</div></div>
+      <div class="detail-item"><div class="detail-label">Exam Mode</div><div class="detail-value">${esc(e.mode)||"Not specified"}</div></div>
+      <div class="detail-item"><div class="detail-label">Applied Status</div><div class="detail-value">${e.applied?"✓ Applied":"☐ Not Applied"}</div></div>
+      <div class="detail-item"><div class="detail-label">Application Status</div><div class="detail-value">${esc(dl.text)}</div></div>
+    </div>
+    <div class="detail-notes"><div class="detail-label">Notes</div><div class="detail-value">${esc(e.notes)||"No notes added."}</div></div>`;
+}
+
+function selectExam(id){ selectedExamId=id; renderExamDetails(id); }
+
+function renderUpcomingExams(){
+  const list=exams.filter(e=>{ const diff=dayDiff(e.examDate); return diff !== null && diff >= 0; })
+    .sort((a,b)=>{ const da=parseDate(a.examDate), db=parseDate(b.examDate); return (da?.getTime()||0)-(db?.getTime()||0); });
+  const tbody=$("upcoming");tbody.innerHTML="";
+  $("upcomingEmpty").style.display=list.length?"none":"block";
+  list.forEach(e=>{
+    const diff=dayDiff(e.examDate);
+    const daysText=diff===0?"TODAY":`${diff} day${diff===1?"":"s"}`;
+    const tr=document.createElement("tr");
+    tr.className="clickable-row";tr.dataset.examId=e.id;tr.title="Click to view complete exam details";
+    tr.innerHTML=`
+      <td><div class="exam-cell">${esc(e.name)}</div></td>
+      <td>${calendarIcon(e.examDate)}</td>
+      <td><span class="days-counter ${diff===0?"today":""}" data-countdown="${e.id}">${daysText}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateCountdowns(){
+  document.querySelectorAll("[data-countdown]").forEach(el=>{
+    const e=exams.find(x=>x.id===el.dataset.countdown); if(!e) return;
+    const diff=dayDiff(e.examDate);
+    if(diff===null) return;
+    if(diff<0) el.textContent="Completed";
+    else if(diff===0) el.textContent="TODAY";
+    else el.textContent=`${diff} day${diff===1?"":"s"}`;
+  });
+}
+
+function updateStatistics(){
+  const now=new Date();
+  $("statTotal").textContent=exams.length;
+  $("statUpcoming").textContent=exams.filter(e=>{ const diff=dayDiff(e.examDate); return diff !== null && diff >= 0; }).length;
+  $("statPending").textContent=exams.filter(e=>!e.applied).length;
+  $("statApplied").textContent=exams.filter(e=>e.applied).length;
+  $("statMonth").textContent=exams.filter(e=>{ const d=parseDate(e.examDate); return d&&d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth(); }).length;
+  $("monthLabel").textContent=now.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+}
+
+function examStatus(e){
+  const diff=dayDiff(e.examDate);
+  if(diff===null) return "Upcoming";
+  if(diff<0) return "Completed";
+  if(diff===0) return "Today";
+  return "Upcoming";
+}
+
+function deadlineInfo(e){
+  if(e.applied) return {type:"applied", text:"✓ Applied"};
+  if(!e.appLast) return {type:"none", text:"Not specified"};
+  const diff=dayDiff(e.appLast);
+  if(diff===null) return {type:"none", text:"Not specified"};
+  if(diff<0) return {type:"closed", text:"✕ Application closed"};
+  if(diff===0) return {type:"today", text:"⚠ Last day to apply — apply today!"};
+  if(diff<=3) return {type:"warning", text:`⚠ Only ${diff} day${diff===1?"":"s"} left to apply`};
+  return {type:"open", text:`${diff} day${diff===1?"":"s"} left to apply`};
+}
+
+function renderAll(){
+  updateStatistics();renderUpcomingExams();renderTable();updateCountdowns();
+  if(selectedExamId && exams.some(e=>e.id===selectedExamId)) renderExamDetails(selectedExamId);
+  else if(!selectedExamId) renderExamDetails(null);
+}
+
+function exportData(){
+  const payload={app:"Exam Tracker",version:1,exportedAt:new Date().toISOString(),exams};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`exam-tracker-backup-${localDateString()}.json`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast("Backup exported ✓");
+}
+
+function importData(){ $("importFile").click(); }
+
+function handleImport(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    $("importFile").value="";
+    try{
+      const parsed=JSON.parse(reader.result);
+      const incoming=Array.isArray(parsed)?parsed:parsed.exams;
+      if(!Array.isArray(incoming)) throw new Error("Invalid format");
+      const clean=incoming.map(normalizeExam).filter(e=>e.name&&e.examDate);
+      showConfirm(`Import ${clean.length} exam${clean.length===1?"":"s"}? This will replace your current exam data.`,()=>{
+        exams=clean;saveData(true);renderAll();toast("Data imported successfully ✓");
+      },"Import");
+    }catch(err){toast("Could not import — please select a valid Exam Tracker JSON backup.");}
+  };
+  reader.readAsText(file);
+}
+
+function esc(value){
+  return String(value??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+let toastTimer;
+function toast(msg){
+  const t=$("toast");t.textContent=msg;t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+$("addBtn").addEventListener("click",addExam);
+$("closeModal").addEventListener("click",closeModal);
+$("cancelModal").addEventListener("click",closeModal);
+$("saveExamBtn").addEventListener("click",saveExam);
+$("modalBackdrop").addEventListener("click",e=>{if(e.target===$("modalBackdrop"))closeModal()});
+$("search").addEventListener("input",filterExams);
+$("sort").addEventListener("change",e=>{currentSort=e.target.value;renderTable()});
+$("filters").addEventListener("click",e=>{
+  const btn=e.target.closest("[data-filter]");if(!btn)return;
+  activeFilter=btn.dataset.filter;
+  document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===btn));
+  renderTable();
+});
+function handleExamListChange(e){
+  if(e.target.matches('input[type="checkbox"][data-id]')){
+    const exam=exams.find(x=>x.id===e.target.dataset.id);
+    if(exam){exam.applied=e.target.checked;saveData(true);renderAll();}
+  }
+}
+function handleExamListClick(e){
+  const edit=e.target.closest("[data-edit]"), del=e.target.closest("[data-delete]"), details=e.target.closest("[data-details]");
+  if(edit){ editExam(edit.dataset.edit); return; }
+  if(del){ deleteExam(del.dataset.delete); return; }
+  if(details) selectExam(details.dataset.details);
+}
+$("examTable").addEventListener("change",handleExamListChange);
+$("examTable").addEventListener("click",handleExamListClick);
+$("mobileExamList").addEventListener("change",handleExamListChange);
+$("mobileExamList").addEventListener("click",handleExamListClick);
+$("upcoming").addEventListener("click",e=>{ const card=e.target.closest("[data-exam-id]"); if(card) selectExam(card.dataset.examId); });
+$("exportBtn").addEventListener("click",exportData);
+$("importBtn").addEventListener("click",importData);
+$("importFile").addEventListener("change",e=>handleImport(e.target.files[0]));
+$("examForm").addEventListener("submit",e=>{e.preventDefault();saveExam()});
+["appStart","appLast","examDate"].forEach(id=>{
+  $(id).addEventListener("input",updateDatePreviews);
+  $(id).addEventListener("change",updateDatePreviews);
+});
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  if($("confirmBackdrop").classList.contains("show")) hideConfirm();
+  else if($("modalBackdrop").classList.contains("show")) closeModal();
+});
+
+loadData();renderAll();
+setInterval(()=>{ renderUpcomingExams();updateStatistics();renderTable();updateCountdowns();if(selectedExamId) renderExamDetails(selectedExamId); },60000);
+</script>
+</body>
+</html>
