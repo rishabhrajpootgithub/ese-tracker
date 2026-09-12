@@ -220,6 +220,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   background:rgba(255,255,255,0.02);
 }
 .check-box input{width:17px;height:17px;accent-color:var(--green)}
+.not-specified-option{margin-top:7px;padding:8px 11px;min-height:38px}
+.not-specified-option span{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase}
 .modal-actions{
   padding:14px 20px;border-top:1px solid var(--line);
   display:flex;justify-content:flex-end;gap:8px;
@@ -394,9 +396,9 @@ tr:hover td{background:rgba(255,255,255,0.02)}
    <div class="grid">
     <div class="field"><label for="examName">Exam Name *</label><input id="examName" required placeholder="e.g. UPSC CSE"></div>
     <div class="field"><label for="organization">Organization / Conducting Body</label><input id="organization" placeholder="e.g. UPSC"></div>
-    <div class="field"><label for="appStart">Application Start Date</label><input id="appStart" type="date" lang="en-IN"><div class="date-preview" id="appStartPreview"></div></div>
-    <div class="field"><label for="appLast">Application Last Date</label><input id="appLast" type="date" lang="en-IN"><div class="date-preview" id="appLastPreview"></div></div>
-    <div class="field"><label for="examDate">Exam Date *</label><input id="examDate" type="date" required><div class="date-preview" id="examDatePreview"></div></div>
+    <div class="field"><label for="appStart">Application Start Date</label><input id="appStart" type="date" lang="en-IN"><label class="check-box not-specified-option"><input id="appStartNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="appStartPreview"></div></div>
+    <div class="field"><label for="appLast">Application Last Date</label><input id="appLast" type="date" lang="en-IN"><label class="check-box not-specified-option"><input id="appLastNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="appLastPreview"></div></div>
+    <div class="field"><label for="examDate">Exam Date *</label><input id="examDate" type="date"><label class="check-box not-specified-option"><input id="examDateNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="examDatePreview"></div></div>
     <div class="field"><label for="mode">Exam Mode</label><select id="mode"><option value="">Not specified</option><option>Online</option><option>Offline</option><option>CBT</option><option>Written</option><option>Interview</option><option>CBT / Written</option><option>Other</option></select></div>
     <div class="field full"><label>Applied Status</label><label class="check-box"><input id="applied" type="checkbox"><span>✓ I have applied for this exam</span></label></div>
     <div class="field full"><label for="notes">Notes</label><textarea id="notes" placeholder="Additional information..."></textarea></div>
@@ -461,6 +463,7 @@ function localDateString(d = new Date()){
 }
 
 function normalizeDateValue(value){
+  if(value === "NOT_SPECIFIED") return "NOT_SPECIFIED";
   if(value === null || value === undefined || value === "") return "";
   if(value instanceof Date && !Number.isNaN(value.getTime())) return localDateString(value);
   const s=String(value).trim();
@@ -500,6 +503,7 @@ function parseDate(value){
 }
 
 function formatDate(value){
+  if(value === "NOT_SPECIFIED") return "Not specified yet";
   const canonical=normalizeDateValue(value);
   const d=parseDate(canonical);
   if(!d) return "—";
@@ -536,9 +540,9 @@ function normalizeExam(e){
     id:String(e.id || uid()),
     name:String(e.name || e.examName || "").trim(),
     org:String(e.org || e.organization || "").trim(),
-    appStart:normalizeDateValue(e.appStart ?? e.applicationStartDate ?? e.applicationStart ?? ""),
-    appLast:normalizeDateValue(e.appLast ?? e.applicationLastDate ?? e.applicationEndDate ?? ""),
-    examDate:normalizeDateValue(e.examDate ?? e.examDateValue ?? ""),
+    appStart:e.appStart === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.appStart ?? e.applicationStartDate ?? e.applicationStart ?? ""),
+    appLast:e.appLast === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.appLast ?? e.applicationLastDate ?? e.applicationEndDate ?? ""),
+    examDate:e.examDate === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.examDate ?? e.examDateValue ?? ""),
     applied:e.applied === true || e.applied === 1 || e.applied === "true" || e.applied === "1",
     mode:String(e.mode || "").trim(),
     notes:String(e.notes || "").trim()
@@ -691,10 +695,16 @@ function stopCloudSync(){
 }
 
 function updateDatePreviews(){
-  const fields=[["appStart","appStartPreview"],["appLast","appLastPreview"],["examDate","examDatePreview"]];
-  fields.forEach(([inputId,previewId])=>{
+  const fields=[
+    ["appStart","appStartPreview","appStartNotSpecified"],
+    ["appLast","appLastPreview","appLastNotSpecified"],
+    ["examDate","examDatePreview","examDateNotSpecified"]
+  ];
+  fields.forEach(([inputId,previewId,checkId])=>{
     const value=$(inputId).value;
-    $(previewId).textContent=value ? `Selected: ${formatDate(value)}` : "";
+    $(previewId).textContent=$(checkId).checked
+      ? "Not specified yet"
+      : (value ? `Selected: ${formatDate(value)}` : "");
   });
 }
 
@@ -708,6 +718,15 @@ function editExam(id){
   $("appStart").value=normalizeDateValue(e.appStart);
   $("appLast").value=normalizeDateValue(e.appLast);
   $("examDate").value=normalizeDateValue(e.examDate);
+
+  $("appStartNotSpecified").checked=e.appStart === "NOT_SPECIFIED";
+  $("appLastNotSpecified").checked=e.appLast === "NOT_SPECIFIED";
+  $("examDateNotSpecified").checked=e.examDate === "NOT_SPECIFIED";
+  $("appStart").disabled=$("appStartNotSpecified").checked;
+  $("appLast").disabled=$("appLastNotSpecified").checked;
+  $("examDate").disabled=$("examDateNotSpecified").checked;
+  $("examDate").required=!$("examDateNotSpecified").checked;
+
   updateDatePreviews();
   $("applied").checked=e.applied;$("mode").value=e.mode;$("notes").value=e.notes;
   $("modalBackdrop").classList.add("show");
@@ -742,6 +761,10 @@ function deleteExam(id){
 function openModal(){
   $("modalTitle").textContent="Add Exam";
   $("examForm").reset();$("editId").value="";
+  $("appStart").disabled=false;
+  $("appLast").disabled=false;
+  $("examDate").disabled=false;
+  $("examDate").required=true;
   updateDatePreviews();
   $("modalBackdrop").classList.add("show");
   setTimeout(()=>$("examName").focus(),50);
@@ -751,12 +774,13 @@ function closeModal(){ $("modalBackdrop").classList.remove("show"); }
 
 function saveExam(){
   const form=$("examForm");
+  $("examDate").required=!$("examDateNotSpecified").checked;
   if(!form.reportValidity()) return;
   const data={
     name:$("examName").value.trim(),org:$("organization").value.trim(),
-    appStart:normalizeDateValue($("appStart").value),
-    appLast:normalizeDateValue($("appLast").value),
-    examDate:normalizeDateValue($("examDate").value),
+    appStart:$("appStartNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("appStart").value),
+    appLast:$("appLastNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("appLast").value),
+    examDate:$("examDateNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("examDate").value),
     applied:$("applied").checked,mode:$("mode").value,notes:$("notes").value.trim()
   };
   const editId=$("editId").value;
@@ -1029,6 +1053,20 @@ $("examForm").addEventListener("submit",e=>{e.preventDefault();saveExam()});
 ["appStart","appLast","examDate"].forEach(id=>{
   $(id).addEventListener("input",updateDatePreviews);
   $(id).addEventListener("change",updateDatePreviews);
+});
+
+[
+  ["appStart","appStartNotSpecified"],
+  ["appLast","appLastNotSpecified"],
+  ["examDate","examDateNotSpecified"]
+].forEach(([dateId,checkId])=>{
+  $(checkId).addEventListener("change",()=>{
+    const checked=$(checkId).checked;
+    $(dateId).disabled=checked;
+    if(checked) $(dateId).value="";
+    if(dateId==="examDate") $(dateId).required=!checked;
+    updateDatePreviews();
+  });
 });
 document.addEventListener("keydown",e=>{
   if(e.key!=="Escape") return;
