@@ -420,7 +420,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -639,7 +639,12 @@ function updateCloudButton(){
 
 async function toggleCloudLogin(){
   if(currentUser){
-    await signOut(auth);
+    try{
+      await signOut(auth);
+    }catch(err){
+      console.error("Logout failed:",err);
+      alert("Logout failed: "+(err.message||"Please try again."));
+    }
     return;
   }
 
@@ -647,10 +652,24 @@ async function toggleCloudLogin(){
     await signInWithPopup(auth,provider);
   }catch(err){
     console.error("Google login failed:",err);
-    if(err.code==="auth/popup-closed-by-user"){
+
+    // Some browsers/devices block the Google popup. In that case use
+    // Firebase's redirect flow instead of leaving the user stuck.
+    if(err.code==="auth/popup-blocked" || err.code==="auth/operation-not-supported-in-this-environment"){
+      try{
+        await signInWithRedirect(auth,provider);
+        return;
+      }catch(redirectErr){
+        console.error("Google redirect login failed:",redirectErr);
+        alert("Google login failed: "+(redirectErr.message||"Please try again."));
+        return;
+      }
+    }
+
+    if(err.code==="auth/popup-closed-by-user" || err.code==="auth/cancelled-popup-request"){
       toast("Login cancelled");
     }else{
-      toast("Login failed — "+(err.message||"please try again"));
+      alert("Google login failed: "+(err.message||"Please try again."));
     }
   }
 }
