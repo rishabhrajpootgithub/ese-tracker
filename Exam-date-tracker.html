@@ -317,7 +317,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
    <button class="btn" id="importBtn">↧ <span>Import</span></button>
    <input type="file" id="importFile" accept=".json,application/json" hidden>
    <button class="btn btn-primary" id="addBtn">＋ <span>Add Exam</span></button>
-   <button class="btn" id="cloudLoginBtn">🔐 <span>Login</span></button>
+   <button type="button" class="btn" id="cloudLoginBtn">🔐 <span>Login</span></button>
   </div>
  </div>
 </header>
@@ -420,7 +420,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, onAuthStateChanged, signOut }
+import { getAuth, GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -649,28 +649,12 @@ async function toggleCloudLogin(){
   }
 
   try{
-    await signInWithPopup(auth,provider);
+    setSavedText("Opening Google login…");
+    await signInWithRedirect(auth,provider);
   }catch(err){
     console.error("Google login failed:",err);
-
-    // Some browsers/devices block the Google popup. In that case use
-    // Firebase's redirect flow instead of leaving the user stuck.
-    if(err.code==="auth/popup-blocked" || err.code==="auth/operation-not-supported-in-this-environment"){
-      try{
-        await signInWithRedirect(auth,provider);
-        return;
-      }catch(redirectErr){
-        console.error("Google redirect login failed:",redirectErr);
-        alert("Google login failed: "+(redirectErr.message||"Please try again."));
-        return;
-      }
-    }
-
-    if(err.code==="auth/popup-closed-by-user" || err.code==="auth/cancelled-popup-request"){
-      toast("Login cancelled");
-    }else{
-      alert("Google login failed: "+(err.message||"Please try again."));
-    }
+    setSavedText("Login failed");
+    alert("Google login failed: "+(err.message||"Please check Firebase Authorized Domains."));
   }
 }
 
