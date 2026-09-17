@@ -7,16 +7,16 @@
 <title>Exam Date Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#08090E;--card:rgba(255,255,255,0.025);--card2:rgba(255,255,255,0.04);
-  --text:#fff;--muted:#6B7280;--line:rgba(255,255,255,0.07);
-  --primary:#6366F1;--primary-dark:#4f46e5;--purple:#A78BFA;--pink:#F472B6;
-  --teal:#2DD4BF;--green:#34D399;--green-bg:rgba(52,211,153,0.15);
-  --amber:#FBBF24;--amber-bg:rgba(251,191,36,0.15);
-  --red:#FB7185;--red-bg:rgba(251,113,133,0.15);
-  --blue-bg:rgba(99,102,241,0.15);
-  --indigo:#818CF8;--indigo-bg:rgba(129,140,248,0.15);
-  --shadow:0 8px 32px rgba(0,0,0,0.4);--radius:14px;
+ :root{
+  --bg:#070B17;--card:rgba(20,30,55,0.72);--card2:rgba(30,43,75,0.72);
+  --text:#fff;--muted:#9AA8C2;--line:rgba(139,170,255,0.14);
+  --primary:#4F8CFF;--primary-dark:#2563EB;--purple:#A855F7;--pink:#EC4899;
+  --teal:#14B8A6;--green:#22C55E;--green-bg:rgba(34,197,94,0.16);
+  --amber:#F59E0B;--amber-bg:rgba(245,158,11,0.16);
+  --red:#F43F5E;--red-bg:rgba(244,63,94,0.16);
+  --blue-bg:rgba(79,140,255,0.18);
+  --indigo:#60A5FA;--indigo-bg:rgba(96,165,250,0.17);
+  --shadow:0 10px 35px rgba(0,0,0,0.45);--radius:14px;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
@@ -24,9 +24,31 @@ button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 ::placeholder{color:var(--muted)}
 
+/* COLOR ENHANCEMENTS */
+body{background:
+  radial-gradient(circle at 8% 12%,rgba(79,140,255,0.13),transparent 28%),
+  radial-gradient(circle at 92% 18%,rgba(168,85,247,0.12),transparent 25%),
+  radial-gradient(circle at 50% 92%,rgba(20,184,166,0.08),transparent 30%),
+  var(--bg)}
+.table-card,.stat,.details-card,.toolbar{
+  background:linear-gradient(145deg,rgba(24,36,67,0.78),rgba(13,20,40,0.82));
+}
+.stat.accent-indigo{box-shadow:0 8px 30px rgba(96,165,250,0.08)}
+.stat.accent-purple{box-shadow:0 8px 30px rgba(168,85,247,0.08)}
+.stat.accent-amber{box-shadow:0 8px 30px rgba(245,158,11,0.08)}
+.stat.accent-green{box-shadow:0 8px 30px rgba(34,197,94,0.08)}
+.stat.accent-pink{box-shadow:0 8px 30px rgba(236,72,153,0.08)}
+.badge-upcoming{background:rgba(79,140,255,0.18);color:#72A7FF}
+.badge-today{background:rgba(245,158,11,0.18);color:#FFC44D}
+.badge-completed{background:rgba(244,63,94,0.18);color:#FF7188}
+.badge-applied{background:rgba(34,197,94,0.18);color:#4ADE80}
+.days-counter{background:rgba(79,140,255,0.18);color:#72A7FF}
+.days-counter.today{background:rgba(245,158,11,0.18);color:#FFC44D}
+.mode{background:rgba(168,85,247,0.18);color:#C084FC}
+.cal-icon .cal-month{background:linear-gradient(135deg,#F43F5E,#EC4899)}
 /* HEADER */
 .header{
-  background:linear-gradient(160deg,#0f0c29,#1a1a2e,#16213e);
+  background:linear-gradient(135deg,#111A3A 0%,#1B1242 48%,#102F4A 100%);
   border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:20;
   backdrop-filter:blur(12px);
@@ -52,8 +74,8 @@ button{cursor:pointer}
 .btn:hover{background:rgba(255,255,255,0.08);transform:translateY(-1px)}
 .btn:active{transform:scale(0.97)}
 .btn-primary{
-  background:linear-gradient(135deg,var(--primary),var(--purple));
-  border-color:transparent;color:#fff;
+  background:linear-gradient(135deg,#3B82F6,#8B5CF6);
+  border-color:transparent;color:#fff;box-shadow:0 6px 20px rgba(79,140,255,0.24);
 }
 .btn-primary:hover{filter:brightness(1.1);background:linear-gradient(135deg,var(--primary),var(--purple))}
 .btn-danger{color:var(--red);border-color:rgba(251,113,133,0.2)}
@@ -135,7 +157,7 @@ button{cursor:pointer}
   letter-spacing:0.3px;transition:all 0.2s;
 }
 .filter:hover{color:var(--text);border-color:rgba(255,255,255,0.2)}
-.filter.active{background:var(--primary);color:#fff;border-color:transparent}
+.filter.active{background:linear-gradient(135deg,#3B82F6,#7C3AED);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(79,140,255,0.22)}
 .sort{
   padding:9px 10px;border:1px solid var(--line);border-radius:10px;
   background:rgba(255,255,255,0.04);color:var(--text);font-size:12px;font-weight:600;
@@ -148,8 +170,9 @@ button{cursor:pointer}
   border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
 }
 .table-scroll{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:1050px}
+table{width:100%;border-collapse:collapse;min-width:1450px}
 .upcoming-table{min-width:0}
+.completed-table{min-width:1100px}
 th{
   background:rgba(255,255,255,0.03);text-align:left;
   font-size:10px;color:var(--muted);text-transform:uppercase;
@@ -168,8 +191,13 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .status-toggle input{display:none}
 .toggle{width:36px;height:20px;background:rgba(255,255,255,0.1);border-radius:20px;position:relative;transition:.2s}
 .toggle:after{content:"";width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;left:2px;top:2px;transition:.2s;box-shadow:0 1px 4px rgba(0,0,0,0.4)}
-.status-toggle input:checked+.toggle{background:var(--green)}
+.status-toggle input:checked+.toggle{background:linear-gradient(90deg,#16A34A,#22C55E);box-shadow:0 0 12px rgba(34,197,94,0.25)}
 .status-toggle input:checked+.toggle:after{left:18px}
+.form-toggle{min-height:42px;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:rgba(255,255,255,0.02)}
+.field .status-toggle.form-toggle{display:inline-flex;align-items:center;width:100%;text-transform:none;letter-spacing:0;color:var(--text);font-size:13px;font-weight:600;margin:0}
+.field .status-toggle.form-toggle .muted{font-size:12px;color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0}
+select{color-scheme:dark}
+select option,select optgroup{background:#0f1220;color:#fff}
 
 /* EMPTY */
 .empty{padding:42px 20px;text-align:center;color:var(--muted)}
@@ -347,6 +375,19 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
  </section>
 
+ <section class="completed-wrap">
+  <div class="section-title"><h2>Completed Exams</h2><span>Automatically moved here after the exam date</span></div>
+  <div class="table-card">
+   <div class="table-scroll">
+    <table class="completed-table">
+     <thead><tr><th>Exam</th><th>Organization</th><th>State / UT / Central</th><th>Exam Date</th><th>Attendance</th><th>Admit Card Generated</th><th>Admit Card Downloaded</th><th>Status</th><th>Actions</th></tr></thead>
+     <tbody id="completedExams"></tbody>
+    </table>
+   </div>
+   <div class="empty" id="completedEmpty" style="display:none"><div class="empty-icon">✓</div><h3>No Completed Exams</h3><p>Completed exams will appear here automatically after their exam date.</p></div>
+  </div>
+ </section>
+
  <section>
   <div class="section-title"><h2>All Exams</h2><span id="resultCount"></span></div>
   <div class="toolbar">
@@ -370,7 +411,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   <div class="table-card">
    <div class="table-scroll">
     <table>
-     <thead><tr><th>Exam</th><th>Organization</th><th>Application Start</th><th>Application Deadline</th><th>Exam Date</th><th>Applied</th><th>Mode</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+     <thead><tr><th>Exam</th><th>Organization</th><th>State / UT / Central</th><th>Application Start</th><th>Application Deadline</th><th>Exam Date</th><th>Applied</th><th>Attendance</th><th>Admit Card Generated</th><th>Admit Card Downloaded</th><th>Mode</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
      <tbody id="examTable"></tbody>
     </table>
    </div>
@@ -396,11 +437,26 @@ tr:hover td{background:rgba(255,255,255,0.02)}
    <div class="grid">
     <div class="field"><label for="examName">Exam Name *</label><input id="examName" required placeholder="e.g. UPSC CSE"></div>
     <div class="field"><label for="organization">Organization / Conducting Body</label><input id="organization" placeholder="e.g. UPSC"></div>
+    <div class="field"><label for="jurisdiction">State / UT / Central Government</label><select id="jurisdiction">
+      <option value="">Not specified</option>
+      <optgroup label="States">
+        <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+      </optgroup>
+      <optgroup label="Union Territories">
+        <option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+      </optgroup>
+      <optgroup label="Central Government">
+        <option>Central Government</option>
+      </optgroup>
+    </select></div>
     <div class="field"><label for="appStart">Application Start Date</label><input id="appStart" type="date" lang="en-IN"><label class="check-box not-specified-option"><input id="appStartNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="appStartPreview"></div></div>
     <div class="field"><label for="appLast">Application Last Date</label><input id="appLast" type="date" lang="en-IN"><label class="check-box not-specified-option"><input id="appLastNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="appLastPreview"></div></div>
     <div class="field"><label for="examDate">Exam Date *</label><input id="examDate" type="date"><label class="check-box not-specified-option"><input id="examDateNotSpecified" type="checkbox"><span>Not specified yet</span></label><div class="date-preview" id="examDatePreview"></div></div>
     <div class="field"><label for="mode">Exam Mode</label><select id="mode"><option value="">Not specified</option><option>Online</option><option>Offline</option><option>CBT</option><option>Written</option><option>Interview</option><option>CBT / Written</option><option>Other</option></select></div>
     <div class="field full"><label>Applied Status</label><label class="check-box"><input id="applied" type="checkbox"><span>✓ I have applied for this exam</span></label></div>
+    <div class="field"><label>Exam Attendance</label><label class="status-toggle form-toggle" title="Toggle between Absent and Present"><input id="attendance" type="checkbox"><span class="toggle"></span><span id="attendanceLabel" class="muted">Absent</span></label></div>
+    <div class="field"><label>Admit Card Generated</label><label class="status-toggle form-toggle" title="Toggle admit card generated"><input id="admitCardGenerated" type="checkbox"><span class="toggle"></span><span id="admitCardGeneratedLabel" class="muted">No</span></label></div>
+    <div class="field"><label>Admit Card Downloaded</label><label class="status-toggle form-toggle" title="Toggle admit card downloaded"><input id="admitCardDownloaded" type="checkbox"><span class="toggle"></span><span id="admitCardDownloadedLabel" class="muted">No</span></label></div>
     <div class="field full"><label for="notes">Notes</label><textarea id="notes" placeholder="Additional information..."></textarea></div>
    </div>
   </form>
@@ -528,10 +584,10 @@ function dayDiff(value){
 
 function seedData(){
   return [
-    {id:uid(),name:"UPSC CSE",org:"UPSC",appStart:"2026-02-18",appLast:"2026-03-10",examDate:"2026-10-04",applied:false,mode:"Written",notes:"Sample data — edit or delete."},
-    {id:uid(),name:"SSC CGL",org:"SSC",appStart:"2026-06-15",appLast:"2026-07-10",examDate:"2026-09-18",applied:true,mode:"CBT",notes:"Sample data — edit or delete."},
+    {id:uid(),name:"UPSC CSE",org:"UPSC",appStart:"2026-02-18",appLast:"2026-03-10",examDate:"2026-10-04",applied:false,mode:"Written",notes:"Sample data — edit or delete.",jurisdiction:"Central Government",attendance:"",admitCardGenerated:false,admitCardDownloaded:false},
+    {id:uid(),name:"SSC CGL",org:"SSC",appStart:"2026-06-15",appLast:"2026-07-10",examDate:"2026-09-18",applied:true,mode:"CBT",notes:"Sample data — edit or delete.",jurisdiction:"Central Government",attendance:"",admitCardGenerated:false,admitCardDownloaded:false,jurisdiction:"Central Government",attendance:"",admitCardGenerated:false,admitCardDownloaded:false},
     {id:uid(),name:"RRB JE",org:"Railway Recruitment Board",appStart:"2026-08-01",appLast:"2026-08-30",examDate:"2026-09-25",applied:false,mode:"CBT",notes:"Sample data — edit or delete."},
-    {id:uid(),name:"GATE",org:"IITs",appStart:"2026-08-28",appLast:"2026-10-10",examDate:"2027-02-07",applied:false,mode:"Online",notes:"Sample data — edit or delete."}
+    {id:uid(),name:"GATE",org:"IITs",appStart:"2026-08-28",appLast:"2026-10-10",examDate:"2027-02-07",applied:false,mode:"Online",notes:"Sample data — edit or delete.",jurisdiction:"Central Government",attendance:"",admitCardGenerated:false,admitCardDownloaded:false}
   ];
 }
 
@@ -540,10 +596,14 @@ function normalizeExam(e){
     id:String(e.id || uid()),
     name:String(e.name || e.examName || "").trim(),
     org:String(e.org || e.organization || "").trim(),
+    jurisdiction:String(e.jurisdiction || e.state || e.ut || "").trim(),
     appStart:e.appStart === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.appStart ?? e.applicationStartDate ?? e.applicationStart ?? ""),
     appLast:e.appLast === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.appLast ?? e.applicationLastDate ?? e.applicationEndDate ?? ""),
     examDate:e.examDate === "NOT_SPECIFIED" ? "NOT_SPECIFIED" : normalizeDateValue(e.examDate ?? e.examDateValue ?? ""),
     applied:e.applied === true || e.applied === 1 || e.applied === "true" || e.applied === "1",
+    attendance:e.attendance === true || e.attendance === "present" || e.attendance === "true" ? "present" : (e.attendance === "absent" || e.attendance === false ? "absent" : ""),
+    admitCardGenerated:e.admitCardGenerated === true || e.admitCardGenerated === 1 || e.admitCardGenerated === "true" || e.admitCardGenerated === "1",
+    admitCardDownloaded:e.admitCardDownloaded === true || e.admitCardDownloaded === 1 || e.admitCardDownloaded === "true" || e.admitCardDownloaded === "1",
     mode:String(e.mode || "").trim(),
     notes:String(e.notes || "").trim()
   };
@@ -567,13 +627,15 @@ function loadData(){
 }
 
 function saveLocalCache(){
-  // Exam Tracker data is cloud-only. Nothing is saved offline/locally.
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(exams));
 }
 
 async function saveData(showToast=false){
+  saveLocalCache();
+
   if(!currentUser || !cloudReady || !cloudDocRef){
-    setSavedText("Login required");
-    if(showToast) toast("Please login to save changes");
+    setSavedText("Waiting for cloud sync…");
+    if(showToast) toast("Saved locally — login to sync across devices");
     return;
   }
 
@@ -661,6 +723,7 @@ async function startCloudSync(user){
       const data=cloudSnap.data()||{};
       if(Array.isArray(data.exams)){
         exams=data.exams.map(normalizeExam).filter(e=>e.name);
+        saveLocalCache();
         cloudReady=true;
         setSavedText("Cloud synced • "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}));
         renderAll();
@@ -687,15 +750,8 @@ function stopCloudSync(){
   cloudDocRef=null;
   cloudReady=false;
   currentUser=null;
-
-  // Hide all Exam Tracker data immediately after logout.
-  exams=[];
-  selectedExamId=null;
-  localStorage.removeItem(STORAGE_KEY);
-  renderAll();
-
   updateCloudButton();
-  setSavedText("Login required");
+  setSavedText("Login required for cloud sync");
 }
 
 function updateDatePreviews(){
@@ -712,14 +768,13 @@ function updateDatePreviews(){
   });
 }
 
-function addExam(){ if(!currentUser) { toast("Please login first"); return; } openModal(); }
+function addExam(){ openModal(); }
 
 function editExam(id){
-  if(!currentUser) { toast("Please login first"); return; }
   const e=exams.find(x=>x.id===id);
   if(!e) return;
   $("modalTitle").textContent="Edit Exam";
-  $("editId").value=e.id;$("examName").value=e.name;$("organization").value=e.org;
+  $("editId").value=e.id;$("examName").value=e.name;$("organization").value=e.org;$("jurisdiction").value=e.jurisdiction||"";
   $("appStart").value=normalizeDateValue(e.appStart);
   $("appLast").value=normalizeDateValue(e.appLast);
   $("examDate").value=normalizeDateValue(e.examDate);
@@ -733,7 +788,14 @@ function editExam(id){
   $("examDate").required=!$("examDateNotSpecified").checked;
 
   updateDatePreviews();
-  $("applied").checked=e.applied;$("mode").value=e.mode;$("notes").value=e.notes;
+  $("applied").checked=e.applied;
+  $("attendance").checked=e.attendance === "present";
+  $("attendanceLabel").textContent=e.attendance === "present" ? "Present" : "Absent";
+  $("admitCardGenerated").checked=!!e.admitCardGenerated;
+  $("admitCardGeneratedLabel").textContent=e.admitCardGenerated ? "Yes" : "No";
+  $("admitCardDownloaded").checked=!!e.admitCardDownloaded;
+  $("admitCardDownloadedLabel").textContent=e.admitCardDownloaded ? "Yes" : "No";
+  $("mode").value=e.mode;$("notes").value=e.notes;
   $("modalBackdrop").classList.add("show");
   setTimeout(()=>$("examName").focus(),50);
 }
@@ -755,7 +817,6 @@ $("confirmClose").addEventListener("click",hideConfirm);
 $("confirmBackdrop").addEventListener("click",e=>{if(e.target===$("confirmBackdrop"))hideConfirm()});
 
 function deleteExam(id){
-  if(!currentUser) { toast("Please login first"); return; }
   const e=exams.find(x=>x.id===id);
   if(!e) return;
   showConfirm(`Are you sure you want to delete "${e.name}"?`,()=>{
@@ -771,6 +832,9 @@ function openModal(){
   $("appLast").disabled=false;
   $("examDate").disabled=false;
   $("examDate").required=true;
+  $("attendanceLabel").textContent="Absent";
+  $("admitCardGeneratedLabel").textContent="No";
+  $("admitCardDownloadedLabel").textContent="No";
   updateDatePreviews();
   $("modalBackdrop").classList.add("show");
   setTimeout(()=>$("examName").focus(),50);
@@ -779,16 +843,17 @@ function openModal(){
 function closeModal(){ $("modalBackdrop").classList.remove("show"); }
 
 function saveExam(){
-  if(!currentUser) { toast("Please login first"); return; }
   const form=$("examForm");
   $("examDate").required=!$("examDateNotSpecified").checked;
   if(!form.reportValidity()) return;
   const data={
-    name:$("examName").value.trim(),org:$("organization").value.trim(),
+    name:$("examName").value.trim(),org:$("organization").value.trim(),jurisdiction:$("jurisdiction").value,
     appStart:$("appStartNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("appStart").value),
     appLast:$("appLastNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("appLast").value),
     examDate:$("examDateNotSpecified").checked ? "NOT_SPECIFIED" : normalizeDateValue($("examDate").value),
-    applied:$("applied").checked,mode:$("mode").value,notes:$("notes").value.trim()
+    applied:$("applied").checked,attendance:$("attendance").checked ? "present" : "absent",
+    admitCardGenerated:$("admitCardGenerated").checked,admitCardDownloaded:$("admitCardDownloaded").checked,
+    mode:$("mode").value,notes:$("notes").value.trim()
   };
   const editId=$("editId").value;
   let savedId;
@@ -833,9 +898,34 @@ function statusBadge(status){
   return `<span class="badge ${cls}">${status.toUpperCase()}</span>`;
 }
 
+function renderCompletedExams(){
+  const list=exams.filter(e=>examStatus(e)==="Completed").sort((a,b)=>{
+    const da=parseDate(a.examDate), db=parseDate(b.examDate);
+    return (db?.getTime()||0)-(da?.getTime()||0);
+  });
+  const tbody=$("completedExams");
+  tbody.innerHTML="";
+  $("completedEmpty").style.display=list.length?"none":"block";
+
+  list.forEach(e=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td><div class="exam-cell clickable-exam" data-details="${e.id}" title="View exam details">${esc(e.name)}</div></td>
+      <td>${esc(e.org)||'<span class="muted">—</span>'}</td>
+      <td>${esc(e.jurisdiction)||'<span class="muted">—</span>'}</td>
+      <td><strong>${formatDate(e.examDate)}</strong></td>
+      <td>${e.attendance==="present"?"Present":e.attendance==="absent"?"Absent":'<span class="muted">Not marked</span>'}</td>
+      <td>${e.admitCardGenerated?"Yes":"No"}</td>
+      <td>${e.admitCardDownloaded?"Yes":"No"}</td>
+      <td>${statusBadge("Completed")}</td>
+      <td><div class="actions"><button class="btn btn-small" data-edit="${e.id}" title="Edit">✏️</button><button class="btn btn-small btn-danger" data-delete="${e.id}" title="Delete">🗑️</button></div></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
 function renderTable(){
   const q=$("search").value.trim().toLowerCase();
-  let list=exams.filter(matchesFilter).filter(e=>(e.name+" "+e.org).toLowerCase().includes(q));
+  let list=exams.filter(matchesFilter).filter(e=>(e.name+" "+e.org+" "+e.jurisdiction).toLowerCase().includes(q));
   list=sortExams(list);
   $("resultCount").textContent=`${list.length} of ${exams.length} exam${exams.length===1?"":"s"}`;
   const tbody=$("examTable");
@@ -851,6 +941,7 @@ function renderTable(){
     tr.innerHTML=`
       <td><div class="exam-cell clickable-exam" data-details="${e.id}" title="View exam details">${esc(e.name)}</div></td>
       <td>${esc(e.org)||'<span class="muted">—</span>'}</td>
+      <td>${esc(e.jurisdiction)||'<span class="muted">—</span>'}</td>
       <td>${formatDate(e.appStart)}</td>
       <td>${formatDate(e.appLast)}</td>
       <td><strong>${formatDate(e.examDate)}</strong></td>
@@ -858,6 +949,24 @@ function renderTable(){
         <label class="status-toggle" title="${e.applied?"Applied":"Not applied"}">
           <input type="checkbox" ${e.applied?"checked":""} data-id="${e.id}">
           <span class="toggle"></span><span class="muted">${e.applied?"Applied":"Pending"}</span>
+        </label>
+      </td>
+      <td>
+        <label class="status-toggle" title="Toggle attendance">
+          <input type="checkbox" ${e.attendance==="present"?"checked":""} data-attendance-id="${e.id}">
+          <span class="toggle"></span><span class="muted">${e.attendance==="present"?"Present":"Absent"}</span>
+        </label>
+      </td>
+      <td>
+        <label class="status-toggle" title="Toggle admit card generated">
+          <input type="checkbox" ${e.admitCardGenerated?"checked":""} data-generated-id="${e.id}">
+          <span class="toggle"></span><span class="muted">${e.admitCardGenerated?"Yes":"No"}</span>
+        </label>
+      </td>
+      <td>
+        <label class="status-toggle" title="Toggle admit card downloaded">
+          <input type="checkbox" ${e.admitCardDownloaded?"checked":""} data-downloaded-id="${e.id}">
+          <span class="toggle"></span><span class="muted">${e.admitCardDownloaded?"Yes":"No"}</span>
         </label>
       </td>
       <td>${e.mode?`<span class="mode">${esc(e.mode)}</span>`:'<span class="muted">—</span>'}</td>
@@ -910,11 +1019,15 @@ function renderExamDetails(id){
       <div>${statusBadge(status)}</div>
     </div>
     <div class="details-grid">
+      <div class="detail-item"><div class="detail-label">State / UT / Central Government</div><div class="detail-value">${esc(e.jurisdiction)||"Not specified"}</div></div>
       <div class="detail-item"><div class="detail-label">Application Start Date</div><div class="detail-value">${formatDate(e.appStart)}</div></div>
       <div class="detail-item"><div class="detail-label">Application Last Date</div><div class="detail-value">${formatDate(e.appLast)}</div></div>
       <div class="detail-item"><div class="detail-label">Exam Date</div><div class="detail-value">${formatDate(e.examDate)}</div></div>
       <div class="detail-item"><div class="detail-label">Exam Mode</div><div class="detail-value">${esc(e.mode)||"Not specified"}</div></div>
       <div class="detail-item"><div class="detail-label">Applied Status</div><div class="detail-value">${e.applied?"✓ Applied":"☐ Not Applied"}</div></div>
+      <div class="detail-item"><div class="detail-label">Exam Attendance</div><div class="detail-value">${e.attendance==="present"?"✓ Present":"✕ Absent"}</div></div>
+      <div class="detail-item"><div class="detail-label">Admit Card Generated</div><div class="detail-value">${e.admitCardGenerated?"✓ Yes":"✕ No"}</div></div>
+      <div class="detail-item"><div class="detail-label">Admit Card Downloaded</div><div class="detail-value">${e.admitCardDownloaded?"✓ Yes":"✕ No"}</div></div>
       <div class="detail-item"><div class="detail-label">Application Status</div><div class="detail-value">${esc(dl.text)}</div></div>
     </div>
     <div class="detail-notes"><div class="detail-label">Notes</div><div class="detail-value">${esc(e.notes)||"No notes added."}</div></div>`;
@@ -981,7 +1094,7 @@ function deadlineInfo(e){
 }
 
 function renderAll(){
-  updateStatistics();renderUpcomingExams();renderTable();updateCountdowns();
+  updateStatistics();renderUpcomingExams();renderCompletedExams();renderTable();updateCountdowns();
   if(selectedExamId && exams.some(e=>e.id===selectedExamId)) renderExamDetails(selectedExamId);
   else if(!selectedExamId) renderExamDetails(null);
 }
@@ -1041,6 +1154,18 @@ function handleExamListChange(e){
     const exam=exams.find(x=>x.id===e.target.dataset.id);
     if(exam){exam.applied=e.target.checked;saveData(true);renderAll();}
   }
+  if(e.target.matches('input[type="checkbox"][data-attendance-id]')){
+    const exam=exams.find(x=>x.id===e.target.dataset.attendanceId);
+    if(exam){exam.attendance=e.target.checked ? "present" : "absent";saveData(true);renderAll();}
+  }
+  if(e.target.matches('input[type="checkbox"][data-generated-id]')){
+    const exam=exams.find(x=>x.id===e.target.dataset.generatedId);
+    if(exam){exam.admitCardGenerated=e.target.checked;saveData(true);renderAll();}
+  }
+  if(e.target.matches('input[type="checkbox"][data-downloaded-id]')){
+    const exam=exams.find(x=>x.id===e.target.dataset.downloadedId);
+    if(exam){exam.admitCardDownloaded=e.target.checked;saveData(true);renderAll();}
+  }
 }
 function handleExamListClick(e){
   const edit=e.target.closest("[data-edit]"), del=e.target.closest("[data-delete]"), details=e.target.closest("[data-details]");
@@ -1057,6 +1182,10 @@ $("exportBtn").addEventListener("click",exportData);
 $("importBtn").addEventListener("click",importData);
 $("importFile").addEventListener("change",e=>handleImport(e.target.files[0]));
 $("examForm").addEventListener("submit",e=>{e.preventDefault();saveExam()});
+$("attendance").addEventListener("change",()=>{ $("attendanceLabel").textContent=$("attendance").checked?"Present":"Absent"; });
+$("admitCardGenerated").addEventListener("change",()=>{ $("admitCardGeneratedLabel").textContent=$("admitCardGenerated").checked?"Yes":"No"; });
+$("admitCardDownloaded").addEventListener("change",()=>{ $("admitCardDownloadedLabel").textContent=$("admitCardDownloaded").checked?"Yes":"No"; });
+
 ["appStart","appLast","examDate"].forEach(id=>{
   $(id).addEventListener("input",updateDatePreviews);
   $(id).addEventListener("change",updateDatePreviews);
@@ -1081,8 +1210,7 @@ document.addEventListener("keydown",e=>{
   else if($("modalBackdrop").classList.contains("show")) closeModal();
 });
 
-// Exam data is loaded only after Firebase authentication succeeds.
-exams=[];
+loadData();
 renderAll();
 
 $("cloudLoginBtn").addEventListener("click",toggleCloudLogin);
@@ -1094,6 +1222,7 @@ onAuthStateChanged(auth,(user)=>{
 
 setInterval(()=>{
   renderUpcomingExams();
+  renderCompletedExams();
   updateStatistics();
   renderTable();
   updateCountdowns();
